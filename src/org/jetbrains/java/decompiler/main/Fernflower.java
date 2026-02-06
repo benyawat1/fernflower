@@ -7,13 +7,7 @@ import org.jetbrains.java.decompiler.main.Classerocessor.ClassNode;
 import org.jetbrains.java.decompiler.main.extern.*;
 =======
 import org.jetbrains.java.decompiler.main.ClassesProcessor.ClassNode;
-import org.jetbrains.java.decompiler.main.extern.IBytecodeProvider;
-import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
-import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
-import org.jetbrains.java.decompiler.main.extern.IMemberIdentifierRenamer;
-import org.jetbrains.java.decompiler.main.extern.IResultSaver;
-import org.jetbrains.java.decompiler.main.extern.IVariableNamingFactory;
->>>>>>> 36bc04c2bb42614fab80c88ac0146c2df44d7ae2
+import org.jetbrains.java.decompiler.main.extern.*;
 import org.jetbrains.java.decompiler.modules.renamer.IdentifierConverter;
 import org.jetbrains.java.decompiler.modules.renamer.MemberConverterHelper;
 import org.jetbrains.java.decompiler.modules.renamer.PoolInterceptor;
