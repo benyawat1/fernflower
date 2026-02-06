@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class ClasspathHelper {
+public final class ClasathHelper {
 
   private static final Map<String, Method> METHOD_CACHE = Collections.synchronizedMap(new HashMap<>());
 
@@ -22,14 +22,14 @@ public final class ClasspathHelper {
       method = METHOD_CACHE.get(methodSignature);
     }
     else {
-      method = findMethodOnClasspath(targetClass, methodSignature);
+      method = findMethodOnClasath(targetClass, methodSignature);
       METHOD_CACHE.put(methodSignature, method);
     }
 
     return method;
   }
 
-  private static Method findMethodOnClasspath(String targetClass, String methodSignature) {
+  private static Method findMethodOnClasath(String targetClass, String methodSignature) {
     try {
       // use bootstrap classloader to only provide access to JRE classes
       Class cls = new ClassLoader(null) {}.loadClass(targetClass);

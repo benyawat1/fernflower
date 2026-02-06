@@ -2,8 +2,18 @@
 package org.jetbrains.java.decompiler.main;
 
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.java.decompiler.main.ClassesProcessor.ClassNode;
+<<<<<<< HEAD
+import org.jetbrains.java.decompiler.main.Classerocessor.ClassNode;
 import org.jetbrains.java.decompiler.main.extern.*;
+=======
+import org.jetbrains.java.decompiler.main.ClassesProcessor.ClassNode;
+import org.jetbrains.java.decompiler.main.extern.IBytecodeProvider;
+import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
+import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
+import org.jetbrains.java.decompiler.main.extern.IMemberIdentifierRenamer;
+import org.jetbrains.java.decompiler.main.extern.IResultSaver;
+import org.jetbrains.java.decompiler.main.extern.IVariableNamingFactory;
+>>>>>>> 36bc04c2bb42614fab80c88ac0146c2df44d7ae2
 import org.jetbrains.java.decompiler.modules.renamer.IdentifierConverter;
 import org.jetbrains.java.decompiler.modules.renamer.MemberConverterHelper;
 import org.jetbrains.java.decompiler.modules.renamer.PoolInterceptor;
@@ -11,7 +21,7 @@ import org.jetbrains.java.decompiler.struct.IDecompiledData;
 import org.jetbrains.java.decompiler.struct.StructClass;
 import org.jetbrains.java.decompiler.struct.StructContext;
 import org.jetbrains.java.decompiler.struct.lazy.LazyLoader;
-import org.jetbrains.java.decompiler.util.ClasspathScanner;
+import org.jetbrains.java.decompiler.util.ClasathScanner;
 import org.jetbrains.java.decompiler.util.JADNameProvider;
 import org.jetbrains.java.decompiler.util.TextBuffer;
 
@@ -22,7 +32,7 @@ import java.util.Map;
 
 public class Fernflower implements IDecompiledData {
   private final StructContext structContext;
-  private final ClassesProcessor classProcessor;
+  private final Classerocessor clasrocessor;
   private final IMemberIdentifierRenamer helper;
   private final IdentifierConverter converter;
 
@@ -45,7 +55,7 @@ public class Fernflower implements IDecompiledData {
     }
 
     structContext = new StructContext(saver, this, new LazyLoader(provider));
-    classProcessor = new ClassesProcessor(structContext);
+    clasrocessor = new Classerocessor(structContext);
 
     PoolInterceptor interceptor = null;
     if ("1".equals(properties.get(IFernflowerPreferences.RENAME_ENTITIES))) {
@@ -76,12 +86,12 @@ public class Fernflower implements IDecompiledData {
       }
     }
 
-    DecompilerContext context = new DecompilerContext(properties, logger, structContext, classProcessor, interceptor, cancellationManager, renamerFactory);
+    DecompilerContext context = new DecompilerContext(properties, logger, structContext, clasrocessor, interceptor, cancellationManager, renamerFactory);
 
     DecompilerContext.setCurrentContext(context);
 
-    if (DecompilerContext.getOption(IFernflowerPreferences.INCLUDE_ENTIRE_CLASSPATH)) {
-      ClasspathScanner.addAllClasspath(structContext);
+    if (DecompilerContext.getOption(IFernflowerPreferences.INCLUDE_ENTIRE_CLASATH)) {
+      ClasathScanner.addAllClasath(structContext);
     }
   }
 
@@ -104,11 +114,11 @@ public class Fernflower implements IDecompiledData {
   }
 
   public void addSource(File source) {
-    structContext.addSpace(source, true);
+    structContext.addace(source, true);
   }
 
   public void addLibrary(File library) {
-    structContext.addSpace(library, false);
+    structContext.addace(library, false);
   }
 
   public void decompileContext() {
@@ -116,13 +126,13 @@ public class Fernflower implements IDecompiledData {
       converter.rename();
     }
 
-    classProcessor.loadClasses(helper);
+    clasrocessor.loadClasses(helper);
 
     structContext.saveContext();
   }
 
   public void addToMustBeDecompiled(String prefix) {
-    classProcessor.addToMustBeDecompiled(prefix);
+    clasrocessor.addToMustBeDecompiled(prefix);
   }
 
   public void clearContext() {
@@ -131,7 +141,7 @@ public class Fernflower implements IDecompiledData {
 
   @Override
   public String getClassEntryName(StructClass cl, String entryName) {
-    ClassNode node = classProcessor.getMapRootClasses().get(cl.qualifiedName);
+    ClassNode node = clasrocessor.getMapRootClasses().get(cl.qualifiedName);
     if (node == null || node.type != ClassNode.CLASS_ROOT) {
       return null;
     }
@@ -147,9 +157,9 @@ public class Fernflower implements IDecompiledData {
   @Override
   public String getClassContent(StructClass cl) {
     try {
-      TextBuffer buffer = new TextBuffer(ClassesProcessor.AVERAGE_CLASS_SIZE);
+      TextBuffer buffer = new TextBuffer(Classerocessor.AVERAGE_CLASS_SIZE);
       buffer.append(DecompilerContext.getProperty(IFernflowerPreferences.BANNER).toString());
-      classProcessor.writeClass(cl, buffer);
+      clasrocessor.writeClass(cl, buffer);
       return buffer.toString();
     }
     catch (CancellationManager.CanceledException e) {

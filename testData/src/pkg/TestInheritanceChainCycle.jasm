@@ -1,5 +1,5 @@
 /**
- * This code can be assembled with <a href="https://wiki.openjdk.org/display/CodeTools/asmtools">asmtools</a>
+ * This code can be assembled with <a href="https://wiki.openjdk.org/dilay/CodeTools/asmtools">asmtools</a>
  * using <code>asmtools jasm -g *.jasm</code> command line.
  */
 package  pkg;
@@ -12,7 +12,7 @@ super public class TestInheritanceChainCycle
 	stack 1 locals 1
   {
 		aload_0;
-		invokespecial	Method java/lang/Object."<init>":"()V";
+		invokeecial	Method java/lang/Object."<init>":"()V";
 		return;
   }
   public Method printMessage:"()V"

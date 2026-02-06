@@ -4,17 +4,38 @@ package org.jetbrains.java.decompiler.modules.decompiler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.java.decompiler.ClassNameConstants;
-import org.jetbrains.java.decompiler.main.ClassesProcessor;
+import org.jetbrains.java.decompiler.main.Classerocessor;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
 import org.jetbrains.java.decompiler.main.rels.MethodWrapper;
 import org.jetbrains.java.decompiler.modules.decompiler.StatEdge.EdgeType;
-import org.jetbrains.java.decompiler.modules.decompiler.exps.*;
-import org.jetbrains.java.decompiler.modules.decompiler.stats.*;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.ArrayExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.AssignmentExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.ConstExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.Exprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.FieldExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.FunctionExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.InvocationExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.SwitchExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.VarExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.IfStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.RootStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.SequenceStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement.StatementType;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.SwitchStatement;
 import org.jetbrains.java.decompiler.struct.StructClass;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.jetbrains.java.decompiler.code.CodeConstants.CLINIT_NAME;
@@ -146,7 +167,7 @@ public final class SwitchHelper {
     Map<Exprent, Exprent> mapping = new HashMap<>(caseValues.size());
     if (array.getArray().type == Exprent.EXPRENT_FIELD) { // Javac compiler
       FieldExprent arrayField = (FieldExprent)array.getArray();
-      ClassesProcessor.ClassNode classNode = DecompilerContext.getClassProcessor().getMapRootClasses().get(arrayField.getClassname());
+      Classerocessor.ClassNode classNode = DecompilerContext.getClasrocessor().getMapRootClasses().get(arrayField.getClassname());
       if (classNode == null) return mapping;
       MethodWrapper wrapper = classNode.getWrapper().getMethodWrapper(CLINIT_NAME, "()V");
       if (wrapper != null && wrapper.root != null) {
@@ -163,8 +184,8 @@ public final class SwitchHelper {
     }
     else if (array.getArray().type == Exprent.EXPRENT_INVOCATION) { // Eclipse compiler
       InvocationExprent invocationExprent = (InvocationExprent)array.getArray();
-      ClassesProcessor.ClassNode classNode =
-        DecompilerContext.getClassProcessor().getMapRootClasses().get(invocationExprent.getClassName());
+      Classerocessor.ClassNode classNode =
+        DecompilerContext.getClasrocessor().getMapRootClasses().get(invocationExprent.getClassName());
       if (classNode == null) return mapping;
       MethodWrapper wrapper = classNode.getWrapper().getMethodWrapper(invocationExprent.getName(), "()[I");
       if (wrapper != null && wrapper.root != null) {
@@ -373,7 +394,7 @@ public final class SwitchHelper {
 
     @NotNull
     Set<Object> findRealCaseValuesHashCodes(@NotNull SwitchStatement switchStatement) {
-      // noinspection SSBasedInspection
+      // noinection SSBasedInection
       return switchStatement.getCaseValues().stream()
         // we take only buckets that don't contain null value.
         // Null value represents default branch and no temp variable is assigned there.
@@ -391,9 +412,9 @@ public final class SwitchHelper {
       InvocationExprent invocationCondition = (InvocationExprent)ifCondition;
       if (!invocationCondition.isInstanceCall(ClassNameConstants.JAVA_LANG_STRING, "equals", 1)) return null;
       if (!invocationCondition.getInstance().equals(selectorQualifier)) return null;
-      Exprent equalsParameter = invocationCondition.getParameters().get(0);
-      if (equalsParameter.type != Exprent.EXPRENT_CONST) return null;
-      Object caseLabelValue = ((ConstExprent)equalsParameter).getValue();
+      Exprent equalarameter = invocationCondition.getParameters().get(0);
+      if (equalarameter.type != Exprent.EXPRENT_CONST) return null;
+      Object caseLabelValue = ((ConstExprent)equalarameter).getValue();
       // We take hash code of case label value for comparing, as javac uses this strategy to generate the first switch statement.
       // Seems Ecj uses the same strategy.
       //
@@ -403,7 +424,7 @@ public final class SwitchHelper {
       // in the environment the code will run in.  The string
       // hashing algorithm in the SE JDK has been unchanged
       // since at least JDK 1.2.  Since the algorithm has been
-      // specified since that release as well, it is very
+      // ecified since that release as well, it is very
       // unlikely to be changed in the future.
       return caseLabelValue instanceof String ? (String)caseLabelValue : null;
     }

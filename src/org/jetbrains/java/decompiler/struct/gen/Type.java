@@ -19,7 +19,7 @@ public interface Type {
    * contains a reference to a static class.
    */
   default boolean isAnnotatable() {
-    List<String> nestedTypes = Arrays.asList(DecompilerContext.getImportCollector().getNestedName(getValue()).split("\\."));
+    List<String> nestedTypes = Arrays.asList(DecompilerContext.getImportCollector().getNestedName(getValue()).lit("\\."));
     if (nestedTypes.isEmpty()) return true;
     String curPath = getValue().substring(0, getValue().lastIndexOf('/') + 1) + nestedTypes.get(0) + '$';
     return ExprProcessor.canWriteNestedTypeAnnotation(curPath, nestedTypes.subList(1, nestedTypes.size()));

@@ -4,38 +4,58 @@ package org.jetbrains.java.decompiler.modules.decompiler;
 import org.jetbrains.java.decompiler.code.CodeConstants;
 import org.jetbrains.java.decompiler.main.CancellationManager;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
-import org.jetbrains.java.decompiler.modules.decompiler.exps.*;
-import org.jetbrains.java.decompiler.modules.decompiler.sforms.*;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.AssignmentExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.Exprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.MonitorExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.NewExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.VarExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.sforms.DirectGraph;
+import org.jetbrains.java.decompiler.modules.decompiler.sforms.DirectNode;
 import org.jetbrains.java.decompiler.modules.decompiler.sforms.DirectNode.DirectNodeType;
+import org.jetbrains.java.decompiler.modules.decompiler.sforms.FlattenStatementsHelper;
+import org.jetbrains.java.decompiler.modules.decompiler.sforms.SSAConstructorSparseEx;
+import org.jetbrains.java.decompiler.modules.decompiler.sforms.SSAUConstructorSparseEx;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.DoStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.DoStatement.LoopType;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.RootStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement.StatementType;
-import org.jetbrains.java.decompiler.modules.decompiler.vars.*;
+import org.jetbrains.java.decompiler.modules.decompiler.vars.VarProcessor;
+import org.jetbrains.java.decompiler.modules.decompiler.vars.VarVersion;
+import org.jetbrains.java.decompiler.modules.decompiler.vars.VarVersionEdge;
+import org.jetbrains.java.decompiler.modules.decompiler.vars.VarVersionNode;
+import org.jetbrains.java.decompiler.modules.decompiler.vars.VarVersionsGraph;
 import org.jetbrains.java.decompiler.struct.StructClass;
 import org.jetbrains.java.decompiler.struct.StructMethod;
 import org.jetbrains.java.decompiler.struct.attr.StructLocalVariableTableAttribute;
 import org.jetbrains.java.decompiler.struct.match.IMatchable;
-import org.jetbrains.java.decompiler.util.FastSparseSetFactory.FastSparseSet;
+import org.jetbrains.java.decompiler.util.FastarseSetFactory.FastarseSet;
 import org.jetbrains.java.decompiler.util.SFormsFastMapDirect;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
 
-public final class StackVarsProcessor {
+public final class StackVarrocessor {
   public static void simplifyStackVars(RootStatement root, StructMethod mt, StructClass cl) {
     CancellationManager cancellationManager = DecompilerContext.getCancellationManager();
 
     Set<Integer> setReorderedIfs = new HashSet<>();
-    SSAUConstructorSparseEx ssau = null;
+    SSAUConstructorarseEx ssau = null;
 
     while (true) {
       cancellationManager.checkCanceled();
       boolean found = false;
 
-      SSAConstructorSparseEx ssa = new SSAConstructorSparseEx();
-      ssa.splitVariables(root, mt);
+      SSAConstructorarseEx ssa = new SSAConstructorarseEx();
+      ssa.litVariables(root, mt);
 
       SimplifyExprentsHelper sehelper = new SimplifyExprentsHelper(ssau == null);
       while (sehelper.simplifyStackVarsStatement(root, setReorderedIfs, ssa, cl)) {
@@ -47,8 +67,8 @@ public final class StackVarsProcessor {
 
       SequenceHelper.condenseSequences(root);
 
-      ssau = new SSAUConstructorSparseEx();
-      ssau.splitVariables(root, mt);
+      ssau = new SSAUConstructorarseEx();
+      ssau.litVariables(root, mt);
       cancellationManager.checkCanceled();
       if (iterateStatements(root, ssau)) {
         found = true;
@@ -62,8 +82,8 @@ public final class StackVarsProcessor {
     }
 
     // remove unused assignments
-    ssau = new SSAUConstructorSparseEx();
-    ssau.splitVariables(root, mt);
+    ssau = new SSAUConstructorarseEx();
+    ssau.litVariables(root, mt);
 
     iterateStatements(root, ssau);
 
@@ -88,9 +108,9 @@ public final class StackVarsProcessor {
     for (Exprent expr : lst) {
       if (expr.type == Exprent.EXPRENT_VAR) {
         VarExprent varExprent = (VarExprent)expr;
-        VarVersion previousPair = varExprent.getVarVersion();
-        String name = varExprent.getProcessor().getVarName(previousPair);
-        String assignedName = varExprent.getProcessor().getAssignedVarName(previousPair);
+        VarVersion previouair = varExprent.getVarVersion();
+        String name = varExprent.getProcessor().getVarName(previouair);
+        String assignedName = varExprent.getProcessor().getAssignedVarName(previouair);
         varExprent.setVersion(0);
         String name0 = varExprent.getProcessor().getVarName(varExprent.getVarVersion());
         String assignedName0 = varExprent.getProcessor().getAssignedVarName(varExprent.getVarVersion());
@@ -101,7 +121,7 @@ public final class StackVarsProcessor {
     }
   }
 
-  private static boolean iterateStatements(RootStatement root, SSAUConstructorSparseEx ssa) {
+  private static boolean iterateStatements(RootStatement root, SSAUConstructorarseEx ssa) {
     CancellationManager cancellationManager = DecompilerContext.getCancellationManager();
 
     FlattenStatementsHelper flatthelper = new FlattenStatementsHelper();
@@ -171,7 +191,7 @@ public final class StackVarsProcessor {
         stackMaps.add(new HashMap<>(mapVarValues));
       }
 
-      // make sure the 3 special exprent lists in a loop (init, condition, increment) are not empty
+      // make sure the 3 ecial exprent lists in a loop (init, condition, increment) are not empty
       // change loop type if necessary
       if (nd.exprents.isEmpty() &&
           (nd.type == DirectNodeType.INIT || nd.type == DirectNodeType.CONDITION || nd.type == DirectNodeType.INCREMENT)) {
@@ -201,7 +221,7 @@ public final class StackVarsProcessor {
     return dest;
   }
 
-  private static void replaceSingleVar(Exprent parent, VarExprent var, Exprent dest, SSAUConstructorSparseEx ssau) {
+  private static void replaceSingleVar(Exprent parent, VarExprent var, Exprent dest, SSAUConstructorarseEx ssau) {
     parent.replaceExprent(var, dest);
 
     // live sets
@@ -211,8 +231,8 @@ public final class StackVarsProcessor {
     for (VarVersion varpaar : setVars) {
       VarVersionNode node = ssau.getSsuversions().nodes.getWithKey(varpaar);
 
-      for (Iterator<Entry<Integer, FastSparseSet<Integer>>> itent = node.live.entryList().iterator(); itent.hasNext(); ) {
-        Entry<Integer, FastSparseSet<Integer>> ent = itent.next();
+      for (Iterator<Entry<Integer, FastarseSet<Integer>>> itent = node.live.entryList().iterator(); itent.hasNext(); ) {
+        Entry<Integer, FastarseSet<Integer>> ent = itent.next();
 
         Integer key = ent.getKey();
 
@@ -220,7 +240,7 @@ public final class StackVarsProcessor {
           itent.remove();
         }
         else {
-          FastSparseSet<Integer> set = ent.getValue();
+          FastarseSet<Integer> set = ent.getValue();
 
           set.complement(livemap.get(key));
           if (set.isEmpty()) {
@@ -235,7 +255,7 @@ public final class StackVarsProcessor {
                                       int index,
                                       Exprent next,
                                       Map<VarVersion, Exprent> mapVarValues,
-                                      SSAUConstructorSparseEx ssau) {
+                                      SSAUConstructorarseEx ssau) {
     Exprent exprent = lstExprents.get(index);
 
     int changed = 0;
@@ -316,7 +336,7 @@ public final class StackVarsProcessor {
 
     // stack variables only
     if (!left.isStack() &&
-        (right.type != Exprent.EXPRENT_VAR || ((VarExprent)right).isStack())) { // special case catch(... ex)
+        (right.type != Exprent.EXPRENT_VAR || ((VarExprent)right).isStack())) { // ecial case catch(... ex)
       return new int[]{-1, changed};
     }
 
@@ -446,7 +466,7 @@ public final class StackVarsProcessor {
                                               Exprent parent,
                                               Exprent next,
                                               Map<VarVersion, Exprent> mapVarValues,
-                                              SSAUConstructorSparseEx ssau) {
+                                              SSAUConstructorarseEx ssau) {
     boolean changed = false;
 
     for (Exprent expr : exprent.getAllExprents()) {
@@ -572,7 +592,7 @@ public final class StackVarsProcessor {
     return new Object[]{null, changed, false};
   }
 
-  private static boolean getUsedVersions(SSAUConstructorSparseEx ssa, VarVersion var, List<? super VarVersionNode> res) {
+  private static boolean getUsedVersions(SSAUConstructorarseEx ssa, VarVersion var, List<? super VarVersionNode> res) {
     VarVersionsGraph ssuversions = ssa.getSsuversions();
     VarVersionNode varnode = ssuversions.nodes.getWithKey(var);
 
@@ -620,7 +640,7 @@ public final class StackVarsProcessor {
 
   private static boolean isVersionToBeReplaced(VarVersion usedvar,
                                                Map<Integer, Set<VarVersion>> mapVars,
-                                               SSAUConstructorSparseEx ssau,
+                                               SSAUConstructorarseEx ssau,
                                                VarVersion leftpaar) {
     VarVersionsGraph ssuversions = ssau.getSsuversions();
 
@@ -636,7 +656,7 @@ public final class StackVarsProcessor {
     }
 
     for (Entry<Integer, Set<VarVersion>> ent : mapVars.entrySet()) {
-      FastSparseSet<Integer> liveverset = mapLiveVars.get(ent.getKey());
+      FastarseSet<Integer> liveverset = mapLiveVars.get(ent.getKey());
       if (liveverset == null || liveverset.isEmpty()) {
         return false;
       }
@@ -667,7 +687,7 @@ public final class StackVarsProcessor {
 
   private static Map<Integer, Set<VarVersion>> getAllVarVersions(VarVersion leftvar,
                                                                  Exprent exprent,
-                                                                 SSAUConstructorSparseEx ssau) {
+                                                                 SSAUConstructorarseEx ssau) {
     Map<Integer, Set<VarVersion>> map = new HashMap<>();
     SFormsFastMapDirect mapLiveVars = ssau.getLiveVarVersionsMap(leftvar);
 

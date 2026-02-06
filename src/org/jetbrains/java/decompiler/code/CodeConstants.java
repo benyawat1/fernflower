@@ -1,7 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package org.jetbrains.java.decompiler.code;
 
-@SuppressWarnings({"unused", "SpellCheckingInspection"})
+@SuppressWarnings({"unused", "ellCheckingInection"})
 public interface CodeConstants {
   // ----------------------------------------------------------------------
   // BYTECODE VERSIONS
@@ -139,8 +139,8 @@ public interface CodeConstants {
   int CONSTANT_MethodHandle_REF_putStatic = 4;
   int CONSTANT_MethodHandle_REF_invokeVirtual = 5;
   int CONSTANT_MethodHandle_REF_invokeStatic = 6;
-  int CONSTANT_MethodHandle_REF_invokeSpecial = 7;
-  int CONSTANT_MethodHandle_REF_newInvokeSpecial = 8;
+  int CONSTANT_MethodHandle_REF_invokeecial = 7;
+  int CONSTANT_MethodHandle_REF_newInvokeecial = 8;
   int CONSTANT_MethodHandle_REF_invokeInterface = 9;
 
   // ----------------------------------------------------------------------
@@ -330,7 +330,7 @@ public interface CodeConstants {
   int opc_getfield = 180;
   int opc_putfield = 181;
   int opc_invokevirtual = 182;
-  int opc_invokespecial = 183;
+  int opc_invokeecial = 183;
   int opc_invokestatic = 184;
   int opc_invokeinterface = 185;
   int opc_invokedynamic = 186;

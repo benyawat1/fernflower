@@ -181,7 +181,7 @@ public final class e extends okhttp3.internal.http2.d.c implements okhttp3.j {
 
          if (var7 != 407) {
             StringBuilder var8 = new StringBuilder();
-            var8.append("Unexpected response code for CONNECT: ");
+            var8.append("Unexpected reonse code for CONNECT: ");
             var8.append(var11.p());
             throw new IOException(var8.toString());
          }

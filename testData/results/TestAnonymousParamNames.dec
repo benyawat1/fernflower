@@ -1,6 +1,6 @@
 package pkg;
 
-public class TestAnonymousParamNames {
+public class TestAnonymouaramNames {
    private final Clazz reference = new Clazz(0L, false) {
    };
 
@@ -10,8 +10,8 @@ public class TestAnonymousParamNames {
    }
 }
 
-class 'pkg/TestAnonymousParamNames$Clazz' {
-   method '<init> (Lpkg/TestAnonymousParamNames;JZ)V' {
+class 'pkg/TestAnonymouaramNames$Clazz' {
+   method '<init> (Lpkg/TestAnonymouaramNames;JZ)V' {
       9      8
    }
 }

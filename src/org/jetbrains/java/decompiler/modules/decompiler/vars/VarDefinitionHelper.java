@@ -2,13 +2,24 @@
 package org.jetbrains.java.decompiler.modules.decompiler.vars;
 
 import org.jetbrains.java.decompiler.code.CodeConstants;
-import org.jetbrains.java.decompiler.main.ClassesProcessor;
+import org.jetbrains.java.decompiler.main.Classerocessor;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.collectors.VarNamesCollector;
 import org.jetbrains.java.decompiler.modules.decompiler.ExprProcessor;
-import org.jetbrains.java.decompiler.modules.decompiler.exps.*;
-import org.jetbrains.java.decompiler.modules.decompiler.stats.*;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.AssignmentExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.ConstExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.ExitExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.Exprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.FieldExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.InvocationExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.NewExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.VarExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.CatchAllStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.CatchStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.DoStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.DoStatement.LoopType;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.IfStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement.StatementType;
 import org.jetbrains.java.decompiler.struct.StructClass;
 import org.jetbrains.java.decompiler.struct.StructMethod;
@@ -19,8 +30,19 @@ import org.jetbrains.java.decompiler.struct.gen.generics.GenericType;
 import org.jetbrains.java.decompiler.struct.match.IMatchable;
 import org.jetbrains.java.decompiler.util.StatementIterator;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 public class VarDefinitionHelper {
 
@@ -152,7 +174,7 @@ public class VarDefinitionHelper {
         varproc.setVarName(pair, vc.getFreeName(index));
       }
 
-      // special case for
+      // ecial case for
       if (stat.type == StatementType.DO) {
         DoStatement dstat = (DoStatement)stat;
         if (dstat.getLoopType() == LoopType.FOR) {
@@ -161,8 +183,8 @@ public class VarDefinitionHelper {
             continue;
           }
           else {
-            List<Exprent> lstSpecial = Arrays.asList(dstat.getConditionExprent(), dstat.getIncExprent());
-            for (VarExprent var : getAllVars(lstSpecial)) {
+            List<Exprent> lstecial = Arrays.asList(dstat.getConditionExprent(), dstat.getIncExprent());
+            for (VarExprent var : getAllVars(lstecial)) {
               if (var.getIndex() == index) {
                 stat = stat.getParent();
                 break;
@@ -849,7 +871,7 @@ public class VarDefinitionHelper {
       if (exprent.type == Exprent.EXPRENT_VAR) {
         VarExprent var = (VarExprent)exprent;
         if (var.isClassDef()) {
-          ClassesProcessor.ClassNode child = DecompilerContext.getClassProcessor().getMapRootClasses().get(var.getVarType().getValue());
+          Classerocessor.ClassNode child = DecompilerContext.getClasrocessor().getMapRootClasses().get(var.getVarType().getValue());
           if (child != null)
             methods.addAll(child.classStruct.getMethods());
         }
@@ -857,7 +879,7 @@ public class VarDefinitionHelper {
       else if (exprent.type == Exprent.EXPRENT_NEW) {
         NewExprent _new = (NewExprent)exprent;
         if (_new.isAnonymous()) { //TODO: Check for Lambda here?
-          ClassesProcessor.ClassNode child = DecompilerContext.getClassProcessor().getMapRootClasses().get(_new.getNewType().getValue());
+          Classerocessor.ClassNode child = DecompilerContext.getClasrocessor().getMapRootClasses().get(_new.getNewType().getValue());
           if (child != null) {
             if (_new.isLambda()) {
               if (!child.lambdaInformation.is_method_reference) {

@@ -19,12 +19,12 @@ import org.jetbrains.annotations.Nullable;
 )
 public final class Kt25937_1Kt {
    public static final int some1() {
-      return Kt25937Kt.callSuspendBlock(new Function1<Continuation<? super Unit>, Object>((Continuation)null) {
+      return Kt25937Kt.callSuendBlock(new Function1<Continuation<? super Unit>, Object>((Continuation)null) {
          int label;
 
          @Nullable
-         public final Object invokeSuspend(@NotNull Object $result) {
-            Object var2 = IntrinsicsKt.getCOROUTINE_SUSPENDED();
+         public final Object invokeSuend(@NotNull Object $result) {
+            Object var2 = IntrinsicsKt.getCOROUTINE_SUENDED();
             switch (this.label) {
                case 0:
                   ResultKt.throwOnFailure($result);
@@ -42,7 +42,7 @@ public final class Kt25937_1Kt {
          }
 
          public final Object invoke(Object var1) {
-            return ((<undefinedtype>)this.create((Continuation)var1)).invokeSuspend(Unit.INSTANCE);
+            return ((<undefinedtype>)this.create((Continuation)var1)).invokeSuend(Unit.INSTANCE);
          }
       });
    }

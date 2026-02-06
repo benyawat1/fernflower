@@ -19,8 +19,16 @@ import org.jetbrains.java.decompiler.struct.StructClass;
 import org.jetbrains.java.decompiler.struct.consts.PooledConstant;
 import org.jetbrains.java.decompiler.struct.consts.PrimitiveConstant;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -98,7 +106,7 @@ public final class ExceptionDeobfuscator {
 
                     BasicBlock newBlock = handler;
 
-                    // split the handler
+                    // lit the handler
                     if (seq.length() > 1) {
                       InstructionSequence newSeq = new SimpleInstructionSequence();
                       newSeq.addInstruction(firstinstr.clone(), -1);
@@ -333,7 +341,7 @@ public final class ExceptionDeobfuscator {
 
     while (true) {
       found = false;
-      boolean splitted = false;
+      boolean litted = false;
 
       for (ExceptionRangeCFG range : graph.getExceptions()) {
         Set<BasicBlock> setEntries = getRangeEntries(range);
@@ -341,14 +349,14 @@ public final class ExceptionDeobfuscator {
         if (setEntries.size() > 1) { // multiple-entry protected range
           found = true;
 
-          if (splitExceptionRange(range, setEntries, graph, engine)) {
-            splitted = true;
+          if (litExceptionRange(range, setEntries, graph, engine)) {
+            litted = true;
             break;
           }
         }
       }
 
-      if (!splitted) {
+      if (!litted) {
         break;
       }
     }
@@ -372,7 +380,7 @@ public final class ExceptionDeobfuscator {
     return setEntries;
   }
 
-  private static boolean splitExceptionRange(ExceptionRangeCFG range,
+  private static boolean litExceptionRange(ExceptionRangeCFG range,
                                              Set<BasicBlock> setEntries,
                                              ControlFlowGraph graph,
                                              GenericDominatorEngine engine) {
@@ -388,7 +396,7 @@ public final class ExceptionDeobfuscator {
       }
       else {
         // should not happen
-        DecompilerContext.getLogger().writeMessage("Inconsistency found while splitting protected range", IFernflowerLogger.Severity.WARN);
+        DecompilerContext.getLogger().writeMessage("Inconsistency found while litting protected range", IFernflowerLogger.Severity.WARN);
       }
     }
 

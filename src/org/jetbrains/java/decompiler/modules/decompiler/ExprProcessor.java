@@ -6,16 +6,32 @@ import org.jetbrains.java.decompiler.code.Instruction;
 import org.jetbrains.java.decompiler.code.InstructionSequence;
 import org.jetbrains.java.decompiler.code.cfg.BasicBlock;
 import org.jetbrains.java.decompiler.main.CancellationManager;
-import org.jetbrains.java.decompiler.main.ClassesProcessor;
+import org.jetbrains.java.decompiler.main.Classerocessor;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.collectors.BytecodeMappingTracer;
 import org.jetbrains.java.decompiler.modules.decompiler.StatEdge.EdgeType;
-import org.jetbrains.java.decompiler.modules.decompiler.exps.*;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.ArrayExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.AssignmentExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.ConstExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.ExitExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.Exprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.FieldExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.FunctionExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.IfExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.InvocationExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.MonitorExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.NewExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.SwitchExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.VarExprent;
 import org.jetbrains.java.decompiler.modules.decompiler.sforms.DirectGraph;
 import org.jetbrains.java.decompiler.modules.decompiler.sforms.DirectNode;
 import org.jetbrains.java.decompiler.modules.decompiler.sforms.FlattenStatementsHelper;
 import org.jetbrains.java.decompiler.modules.decompiler.sforms.FlattenStatementsHelper.FinallyPathWrapper;
-import org.jetbrains.java.decompiler.modules.decompiler.stats.*;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.BasicBlockStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.CatchAllStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.CatchStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.RootStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement.StatementType;
 import org.jetbrains.java.decompiler.modules.decompiler.typeann.TypeAnnotationWriteHelper;
 import org.jetbrains.java.decompiler.modules.decompiler.vars.VarProcessor;
@@ -34,11 +50,21 @@ import org.jetbrains.java.decompiler.struct.gen.VarType;
 import org.jetbrains.java.decompiler.struct.gen.generics.GenericType;
 import org.jetbrains.java.decompiler.util.TextBuffer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ExprProcessor {
-  @SuppressWarnings("SpellCheckingInspection")
+  @SuppressWarnings("ellCheckingInection")
   public static final String UNDEFINED_TYPE_STRING = "<undefinedtype>";
   public static final String UNKNOWN_TYPE_STRING = "<unknown>";
   public static final String NULL_TYPE_STRING = "<null>";
@@ -505,7 +531,7 @@ public class ExprProcessor {
           exprList.add(new AssignmentExprent(exprField, valField, offsets));
           break;
         case CodeConstants.opc_invokevirtual:
-        case CodeConstants.opc_invokespecial:
+        case CodeConstants.opc_invokeecial:
         case CodeConstants.opc_invokestatic:
         case CodeConstants.opc_invokeinterface:
         case CodeConstants.opc_invokedynamic:
@@ -710,7 +736,7 @@ public class ExprProcessor {
       if (ret == null) {
         return UNDEFINED_TYPE_STRING; // FIXME: a warning should be logged
       }
-      List<String> nestedTypes = Arrays.asList(ret.split("\\."));
+      List<String> nestedTypes = Arrays.asList(ret.lit("\\."));
       typeAnnWriteHelpers = writeNestedClass(sb, type, nestedTypes, typeAnnWriteHelpers);
       popNestedTypeAnnotation(typeAnnWriteHelpers);
       return sb.toString();
@@ -744,7 +770,7 @@ public class ExprProcessor {
     List<String> nestedTypes,
     List<TypeAnnotationWriteHelper> typeAnnWriteHelpers
   ) {
-    List<ClassesProcessor.ClassNode> enclosingClasses = enclosingClassList();
+    List<Classerocessor.ClassNode> enclosingClasses = enclosingClassList();
     StringBuilder curPathBuilder = new StringBuilder(type.getValue().substring(0, type.getValue().lastIndexOf('/') + 1));
     for (int i = 0; i < nestedTypes.size(); i++) {
       String nestedType = nestedTypes.get(i);
@@ -795,18 +821,18 @@ public class ExprProcessor {
            canWriteNestedTypeAnnotation(fullName + "$", nestedTypes.subList(1, nestedTypes.size()));
   }
 
-  public static List<ClassesProcessor.ClassNode> enclosingClassList() {
-    ClassesProcessor.ClassNode enclosingClass = (ClassesProcessor.ClassNode) DecompilerContext.getProperty(
+  public static List<Classerocessor.ClassNode> enclosingClassList() {
+    Classerocessor.ClassNode enclosingClass = (Classerocessor.ClassNode) DecompilerContext.getProperty(
       DecompilerContext.CURRENT_CLASS_NODE
     );
-    List<ClassesProcessor.ClassNode> enclosingClassList = new ArrayList<>(List.of(enclosingClass));
+    List<Classerocessor.ClassNode> enclosingClassList = new ArrayList<>(List.of(enclosingClass));
     while (enclosingClass.parent != null) {
       enclosingClass = enclosingClass.parent;
       enclosingClassList.add(0, enclosingClass);
     }
     return enclosingClassList.stream()
-      .filter(classNode -> classNode.type != ClassesProcessor.ClassNode.CLASS_ANONYMOUS &&
-                           classNode.type != ClassesProcessor.ClassNode.CLASS_LAMBDA
+      .filter(classNode -> classNode.type != Classerocessor.ClassNode.CLASS_ANONYMOUS &&
+                           classNode.type != Classerocessor.ClassNode.CLASS_LAMBDA
       ).collect(Collectors.toList());
   }
 

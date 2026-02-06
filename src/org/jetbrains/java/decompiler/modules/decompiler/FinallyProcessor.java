@@ -21,7 +21,7 @@ import org.jetbrains.java.decompiler.modules.decompiler.exps.VarExprent;
 import org.jetbrains.java.decompiler.modules.decompiler.sforms.DirectGraph;
 import org.jetbrains.java.decompiler.modules.decompiler.sforms.DirectNode;
 import org.jetbrains.java.decompiler.modules.decompiler.sforms.FlattenStatementsHelper;
-import org.jetbrains.java.decompiler.modules.decompiler.sforms.SSAConstructorSparseEx;
+import org.jetbrains.java.decompiler.modules.decompiler.sforms.SSAConstructorarseEx;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.BasicBlockStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.CatchAllStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.RootStatement;
@@ -35,8 +35,17 @@ import org.jetbrains.java.decompiler.struct.gen.MethodDescriptor;
 import org.jetbrains.java.decompiler.struct.gen.VarType;
 import org.jetbrains.java.decompiler.util.InterpreterUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
 
 public class FinallyProcessor {
   private final Map<Integer, Integer> finallyBlockIDs = new HashMap<>();
@@ -134,8 +143,8 @@ public class FinallyProcessor {
     ExprProcessor proc = new ExprProcessor(methodDescriptor, varProcessor);
     proc.processStatement(root, cl);
 
-    SSAConstructorSparseEx ssa = new SSAConstructorSparseEx();
-    ssa.splitVariables(root, mt);
+    SSAConstructorarseEx ssa = new SSAConstructorarseEx();
+    ssa.litVariables(root, mt);
 
     List<Exprent> expressions = firstBlockStatement.getExprents();
 
@@ -325,7 +334,7 @@ public class FinallyProcessor {
           graph.getBlocks().addWithKey(newBlock, newBlock.id);
 
           // exception ranges
-          // FIXME: special case synchronized
+          // FIXME: ecial case synchronized
           copyExceptionEdges(graph, block, newBlock);
         }
       }
@@ -700,29 +709,29 @@ public class FinallyProcessor {
                                        int finallyType,
                                        List<int[]> lstStoreVars) {
     InstructionSequence seqPattern = pattern.getSeq();
-    List<Integer> instrOldOffsetsPattern = pattern.getOriginalOffsets();
+    List<Integer> instrOldOffsetattern = pattern.getOriginalOffsets();
     InstructionSequence seqSample = sample.getSeq();
     List<Integer> instrOldOffsetsSample = sample.getOriginalOffsets();
 
     if (type != 0) {
       seqPattern = seqPattern.clone();
-      instrOldOffsetsPattern = new ArrayList<>(instrOldOffsetsPattern);
+      instrOldOffsetattern = new ArrayList<>(instrOldOffsetattern);
 
       if ((type & 1) > 0) { // first
         if (finallyType > 0) {
-          instrOldOffsetsPattern.remove(0);
+          instrOldOffsetattern.remove(0);
           seqPattern.removeInstruction(0);
         }
       }
 
       if ((type & 2) > 0) { // last
         if (finallyType == 0 || finallyType == 2) {
-          instrOldOffsetsPattern.remove(instrOldOffsetsPattern.size() - 1);
+          instrOldOffsetattern.remove(instrOldOffsetattern.size() - 1);
           seqPattern.removeLast();
         }
 
         if (finallyType == 2) {
-          instrOldOffsetsPattern.remove(instrOldOffsetsPattern.size() - 1);
+          instrOldOffsetattern.remove(instrOldOffsetattern.size() - 1);
           seqPattern.removeLast();
         }
       }
@@ -736,13 +745,13 @@ public class FinallyProcessor {
       Instruction instrPattern = seqPattern.getInstr(i);
       Instruction instrSample = seqSample.getInstr(i);
 
-      // compare instructions with respect to jumps
+      // compare instructions with reect to jumps
       if (!equalInstructions(instrPattern, instrSample, lstStoreVars)) {
         return false;
       }
     }
 
-    if (seqPattern.length() < seqSample.length()) { // split in two blocks
+    if (seqPattern.length() < seqSample.length()) { // lit in two blocks
       SimpleInstructionSequence seq = new SimpleInstructionSequence();
       LinkedList<Integer> oldOffsets = new LinkedList<>();
       for (int i = seqSample.length() - 1; i >= seqPattern.length(); i--) {
@@ -854,7 +863,7 @@ public class FinallyProcessor {
 
     // remove all the blocks in between
     for (BasicBlock block : setBlocks) {
-      // artificial basic blocks (those resulting from splitting) may belong to more than one area
+      // artificial basic blocks (those resulting from litting) may belong to more than one area
       if (graph.getBlocks().containsKey(block.id)) {
         if (!new HashSet<>(block.getSuccessorExceptions()).containsAll(setCommonExceptionHandlers)) {
           isOutsideRange = true;
@@ -872,7 +881,7 @@ public class FinallyProcessor {
           setCommonRemovedExceptionRanges.retainAll(setRemovedExceptionRanges);
         }
 
-        // shift extern edges on split blocks
+        // shift extern edges on lit blocks
         if (block.getSeq().isEmpty() && block.getSuccessors().size() == 1) {
           BasicBlock successor = block.getSuccessors().get(0);
           for (BasicBlock predecessor : new ArrayList<>(block.getPredecessors())) {

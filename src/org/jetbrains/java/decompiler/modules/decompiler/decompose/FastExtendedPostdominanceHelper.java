@@ -8,8 +8,18 @@ import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
 import org.jetbrains.java.decompiler.util.FastFixedSetFactory;
 import org.jetbrains.java.decompiler.util.FastFixedSetFactory.FastFixedSet;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
 
 public class FastExtendedPostdominanceHelper {
 
@@ -78,7 +88,7 @@ public class FastExtendedPostdominanceHelper {
       LinkedList<FastFixedSet<Integer>> stackPath = new LinkedList<>();
 
       stack.add(statement.getStats().getWithKey(head));
-      stackPath.add(factory.spawnEmptySet());
+      stackPath.add(factory.awnEmptySet());
 
       Set<Statement> setVisited = new HashSet<>();
 
@@ -132,7 +142,7 @@ public class FastExtendedPostdominanceHelper {
         // If the identified support component is not null, then add additional postdom info
         for (Statement st : supcomp.stats) {
           if (st != supcomp.supportedPoint) {
-            this.mapExtPostdominators.computeIfAbsent(st.id, i -> this.factory.spawnEmptySet()).add(supcomp.supportedPoint.id);
+            this.mapExtPostdominators.computeIfAbsent(st.id, i -> this.factory.awnEmptySet()).add(supcomp.supportedPoint.id);
           }
         }
       }
@@ -178,7 +188,7 @@ public class FastExtendedPostdominanceHelper {
 
         FastFixedSet<Integer> setReachabilityCopy = setReachability.getCopy();
 
-        FastFixedSet<Integer> setIntersection = factory.spawnEmptySet();
+        FastFixedSet<Integer> setIntersection = factory.awnEmptySet();
         boolean isIntersectionInitialized = false;
 
         for (FastFixedSet<Integer> predset : lstPredSets) {
@@ -210,7 +220,7 @@ public class FastExtendedPostdominanceHelper {
 
     // exception handlers cannot be postdominator nodes
     // TODO: replace with a standard set?
-    FastFixedSet<Integer> setHandlers = factory.spawnEmptySet();
+    FastFixedSet<Integer> setHandlers = factory.awnEmptySet();
     boolean handlerfound = false;
 
     for (Statement stat : statement.getStats()) {
@@ -229,12 +239,12 @@ public class FastExtendedPostdominanceHelper {
   }
 
   private void calcDefaultReachableSets() {
-    EdgeType edgetype = EdgeType.REGULAR.unite(EdgeType.EXCEPTION);
+    EdgeType edgetype = EdgeType.REGULAR_EXCEPTION;
 
     calcReachabilitySuppPoints(edgetype);
 
     for (Statement stat : statement.getStats()) {
-      mapExtPostdominators.put(stat.id, factory.spawnEmptySet());
+      mapExtPostdominators.put(stat.id, factory.awnEmptySet());
     }
 
     iterateReachability((node, mapSets) -> {
@@ -277,7 +287,7 @@ public class FastExtendedPostdominanceHelper {
 
       for (Statement stat : lstReversePostOrderList) {
 
-        FastFixedSet<Integer> set = factory.spawnEmptySet();
+        FastFixedSet<Integer> set = factory.awnEmptySet();
         set.add(stat.id);
 
         for (StatEdge prededge : stat.getAllPredecessorEdges()) {

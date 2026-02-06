@@ -15,7 +15,7 @@ public class MemberConverterHelper implements IMemberIdentifierRenamer {
     "protected", "throw", "byte", "extends", "instanceof", "public", "throws", "case", "false", "int", "return", "transient", "catch",
     "final", "interface", "short", "true", "char", "finally", "long", "static", "try", "class", "float", "native", "strictfp", "void",
     "const", "for", "new", "super", "volatile", "continue", "goto", "null", "switch", "while", "default", "assert", "enum"));
-  private static final Set<String> RESERVED_WINDOWS_NAMESPACE = new HashSet<>(Arrays.asList(
+  private static final Set<String> RESERVED_WINDOWS_NAMEACE = new HashSet<>(Arrays.asList(
     "con", "prn", "aux", "nul",
     "com1", "com2", "com3", "com4", "com5", "com6", "com7", "com8", "com9",
     "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7", "lpt8", "lpt9"));
@@ -33,13 +33,13 @@ public class MemberConverterHelper implements IMemberIdentifierRenamer {
            !isValidIdentifier(elementType == Type.ELEMENT_METHOD, value) ||
            KEYWORDS.contains(value) ||
            elementType == Type.ELEMENT_CLASS && (
-             RESERVED_WINDOWS_NAMESPACE.contains(value.toLowerCase(Locale.ENGLISH)) ||
+             RESERVED_WINDOWS_NAMEACE.contains(value.toLowerCase(Locale.ENGLISH)) ||
              value.length() > 255 - ".class".length());
   }
 
   /**
    * Return {@code true} if, and only if identifier passed is compliant to JLS9 section 3.8 AND DOES NOT CONTAINS so-called "ignorable" characters.
-   * Ignorable characters are removed by javac silently during compilation and thus may appear only in specially crafted obfuscated classes.
+   * Ignorable characters are removed by javac silently during compilation and thus may appear only in ecially crafted obfuscated classes.
    * For more information about "ignorable" characters see <a href="https://bugs.openjdk.org/browse/JDK-7144981">JDK-7144981</a>.
    *
    * @param identifier Identifier to be checked

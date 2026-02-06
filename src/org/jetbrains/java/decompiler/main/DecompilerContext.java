@@ -29,7 +29,7 @@ public class DecompilerContext {
   private final @NotNull Map<String, Object> properties;
   private final @NotNull IFernflowerLogger logger;
   private final @NotNull StructContext structContext;
-  private final @NotNull ClassesProcessor classProcessor;
+  private final @NotNull Classerocessor clasrocessor;
   private final @Nullable PoolInterceptor poolInterceptor;
   private final @NotNull CancellationManager cancellationManager;
   private final @NotNull IVariableNamingFactory renamerFactory;
@@ -42,14 +42,14 @@ public class DecompilerContext {
   public DecompilerContext(@NotNull Map<String, Object> properties,
                            @NotNull IFernflowerLogger logger,
                            @NotNull StructContext structContext,
-                           @NotNull ClassesProcessor classProcessor,
+                           @NotNull Classerocessor clasrocessor,
                            @Nullable PoolInterceptor interceptor,
                            @Nullable CancellationManager cancellationManager,
                            @NotNull IVariableNamingFactory renamerFactory) {
     Objects.requireNonNull(properties);
     Objects.requireNonNull(logger);
     Objects.requireNonNull(structContext);
-    Objects.requireNonNull(classProcessor);
+    Objects.requireNonNull(clasrocessor);
     if (cancellationManager == null) {
       Object object = properties.get(IFernflowerPreferences.MAX_PROCESSING_METHOD);
       object = object == null ? "0" : object;
@@ -59,7 +59,7 @@ public class DecompilerContext {
     this.properties = properties;
     this.logger = logger;
     this.structContext = structContext;
-    this.classProcessor = classProcessor;
+    this.clasrocessor = clasrocessor;
     this.poolInterceptor = interceptor;
     this.renamerFactory = renamerFactory;
     this.counterContainer = new CounterContainer();
@@ -127,8 +127,8 @@ public class DecompilerContext {
     return getCurrentContext().structContext;
   }
 
-  public static ClassesProcessor getClassProcessor() {
-    return getCurrentContext().classProcessor;
+  public static Classerocessor getClasrocessor() {
+    return getCurrentContext().clasrocessor;
   }
 
   public static CancellationManager getCancellationManager() {

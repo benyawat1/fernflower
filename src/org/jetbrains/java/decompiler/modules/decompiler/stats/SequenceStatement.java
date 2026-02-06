@@ -111,7 +111,7 @@ public class SequenceStatement extends Statement {
       TextBuffer str = ExprProcessor.jmpWrapper(stat, indent, false, tracer);
       buf.append(str);
 
-      notEmpty = !str.containsOnlyWhitespaces();
+      notEmpty = !str.containsOnlyWhiteaces();
     }
 
     if (isLabeled) {

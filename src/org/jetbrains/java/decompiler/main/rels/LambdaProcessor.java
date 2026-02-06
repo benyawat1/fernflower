@@ -4,8 +4,8 @@ package org.jetbrains.java.decompiler.main.rels;
 import org.jetbrains.java.decompiler.code.CodeConstants;
 import org.jetbrains.java.decompiler.code.Instruction;
 import org.jetbrains.java.decompiler.code.InstructionSequence;
-import org.jetbrains.java.decompiler.main.ClassesProcessor;
-import org.jetbrains.java.decompiler.main.ClassesProcessor.ClassNode;
+import org.jetbrains.java.decompiler.main.Classerocessor;
+import org.jetbrains.java.decompiler.main.Classerocessor.ClassNode;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.struct.StructClass;
 import org.jetbrains.java.decompiler.struct.StructMethod;
@@ -18,19 +18,23 @@ import org.jetbrains.java.decompiler.struct.gen.MethodDescriptor;
 import org.jetbrains.java.decompiler.util.InterpreterUtil;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class LambdaProcessor {
-  @SuppressWarnings("SpellCheckingInspection") private static final String JAVAC_LAMBDA_CLASS = "java/lang/invoke/LambdaMetafactory";
-  @SuppressWarnings("SpellCheckingInspection") private static final String JAVAC_LAMBDA_METHOD = "metafactory";
-  @SuppressWarnings("SpellCheckingInspection") private static final String JAVAC_LAMBDA_ALT_METHOD = "altMetafactory";
+  @SuppressWarnings("ellCheckingInection") private static final String JAVAC_LAMBDA_CLASS = "java/lang/invoke/LambdaMetafactory";
+  @SuppressWarnings("ellCheckingInection") private static final String JAVAC_LAMBDA_METHOD = "metafactory";
+  @SuppressWarnings("ellCheckingInection") private static final String JAVAC_LAMBDA_ALT_METHOD = "altMetafactory";
 
   public void processClass(ClassNode node) throws IOException {
     for (ClassNode child : node.nested) {
       processClass(child);
     }
 
-    ClassesProcessor clProcessor = DecompilerContext.getClassProcessor();
+    Classerocessor clProcessor = DecompilerContext.getClasrocessor();
     StructClass cl = node.classStruct;
 
     if (!cl.isVersion8()) { // lambda beginning with Java 8

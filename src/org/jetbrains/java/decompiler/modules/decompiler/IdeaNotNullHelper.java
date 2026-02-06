@@ -4,7 +4,12 @@ package org.jetbrains.java.decompiler.modules.decompiler;
 import org.jetbrains.java.decompiler.code.CodeConstants;
 import org.jetbrains.java.decompiler.code.cfg.BasicBlock;
 import org.jetbrains.java.decompiler.modules.decompiler.StatEdge.EdgeDirection;
-import org.jetbrains.java.decompiler.modules.decompiler.exps.*;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.AnnotationExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.ExitExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.Exprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.FunctionExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.InvocationExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.VarExprent;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.BasicBlockStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.IfStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.SequenceStatement;
@@ -240,7 +245,7 @@ public final class IdeaNotNullHelper {
               if (first_param.equals(exprent_value)) {        // TODO: check for absence of side effects like method invocations etc.
                 if (ifbranch.type == StatementType.BASIC_BLOCK &&
                     ifbranch.getExprents().size() == 1 &&
-                    // TODO: special check for IllegalStateException
+                    // TODO: ecial check for IllegalStateException
                     ifbranch.getExprents().get(0).type == Exprent.EXPRENT_EXIT) {
 
                   ifparent.getFirst().removeSuccessor(ifedge);
@@ -303,7 +308,7 @@ public final class IdeaNotNullHelper {
                 if (first_param.equals(exprent_value)) {        // TODO: check for absence of side effects like method invocations etc.
                   if (ifbranch.type == StatementType.BASIC_BLOCK &&
                       ifbranch.getExprents().size() == 1 &&
-                      // TODO: special check for IllegalStateException
+                      // TODO: ecial check for IllegalStateException
                       (ifbranch.getExprents().get(0).type == Exprent.EXPRENT_EXIT  ||
                        (ifbranch.getExprents().get(0) instanceof InvocationExprent invocationExprent &&
                         invocationExprent.getName() != null &&

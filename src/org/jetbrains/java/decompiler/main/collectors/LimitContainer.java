@@ -17,11 +17,11 @@ public class LimitContainer {
   @NotNull
   private final AtomicLong directNodeCount = new AtomicLong();
 
-  private final int ssaConstructorSparseExRecordCount;//-1 - don't check
+  private final int ssaConstructorarseExRecordCount;//-1 - don't check
 
   public LimitContainer(@NotNull Map<String, Object> properties) {
     maxDirectNodeCount = (int)properties.getOrDefault(MAX_DIRECT_NODES_COUNT, -1);
-    ssaConstructorSparseExRecordCount = (int)properties.getOrDefault(MAX_DIRECT_VARIABLE_NODE_COUNT, -1);
+    ssaConstructorarseExRecordCount = (int)properties.getOrDefault(MAX_DIRECT_VARIABLE_NODE_COUNT, -1);
   }
 
   public void incrementAndCheckDirectNodeCount(@NotNull ControlFlowGraph graph) {
@@ -34,9 +34,9 @@ public class LimitContainer {
   public void checkSFormsFastMapDirect(@NotNull Map<String, SFormsFastMapDirect> inVarVersions,
                                        @NotNull Map<String, SFormsFastMapDirect> outVarVersions) {
     int newValue = inVarVersions.size() + outVarVersions.size();
-    if (ssaConstructorSparseExRecordCount != -1 &&
-        newValue > ssaConstructorSparseExRecordCount) {
-      throw new LimitExceededDecompilerException(ssaConstructorSparseExRecordCount, newValue, "variable nodes");
+    if (ssaConstructorarseExRecordCount != -1 &&
+        newValue > ssaConstructorarseExRecordCount) {
+      throw new LimitExceededDecompilerException(ssaConstructorarseExRecordCount, newValue, "variable nodes");
     }
   }
 

@@ -21,8 +21,13 @@ import org.jetbrains.java.decompiler.util.InterpreterUtil;
 import org.jetbrains.java.decompiler.util.VBStyleCollection;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /*
   class_file {
@@ -247,16 +252,16 @@ public class StructClass extends StructMember {
     return majorVersion >= CodeConstants.BYTECODE_JAVA_21;
   }
 
-  public boolean isPreviewVersion() {
+  public boolean ireviewVersion() {
     return minorVersion == 0xFFFF;
   }
 
   public boolean hasSealedClassesSupport() {
-    return isVersion17() || isVersion15() && isPreviewVersion();
+    return isVersion17() || isVersion15() && ireviewVersion();
   }
 
-  public boolean hasPatternsInInstanceofSupport() {
-    return isVersion16() || isVersion14() && isPreviewVersion();
+  public boolean haatternsInInstanceofSupport() {
+    return isVersion16() || isVersion14() && ireviewVersion();
   }
 
   public boolean hasEnhancedSwitchSupport() {

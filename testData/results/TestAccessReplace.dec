@@ -7,7 +7,7 @@ public class TestAccessReplace {
    private void foo() {
    }// 20
 
-   private static void fooSParams(long a, long b) {
+   private static void fooarams(long a, long b) {
    }// 21
 
    private void fooParams(long a, long b) {
@@ -17,7 +17,7 @@ public class TestAccessReplace {
       public Inner(String b) {
          TestAccessReplace.fooS();// 26
          TestAccessReplace.this.foo();// 27
-         TestAccessReplace.fooSParams(1L, 2L);// 28
+         TestAccessReplace.fooarams(1L, 2L);// 28
          TestAccessReplace.this.fooParams(1L, 2L);// 29
       }// 30
    }
@@ -32,7 +32,7 @@ class 'pkg/TestAccessReplace' {
       0      7
    }
 
-   method 'fooSParams (JJ)V' {
+   method 'fooarams (JJ)V' {
       0      10
    }
 

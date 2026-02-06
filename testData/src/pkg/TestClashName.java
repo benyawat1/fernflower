@@ -63,7 +63,7 @@ public class TestClashName extends ext.TestClashNameParent implements /*pkg.*/Te
   int m = pkg.SharedName1.getF();// (+)InvocationExprent.  SharedName1 class name is shadowed by a variable in this class
   int n = NonSharedName.getF();  // (-)InvocationExprent. The NonSharedName is not used for other objects in the current scope
   SharedName1 p = null;          // (-)ExprProcessor. While a variable named SharedName1 in current scope does exist,
-                                 // namespace in type declaration does not include variable names in a scope
+                                 // nameace in type declaration does not include variable names in a scope
   SharedName5<SharedName1> q = null;//(-)(-)GenericMain (both names).  While a variable named SharedName1 does exist in current scope,
                                   // lookup for generic parameters never includes variable names
 

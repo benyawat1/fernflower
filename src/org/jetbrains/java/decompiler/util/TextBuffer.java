@@ -4,7 +4,15 @@ package org.jetbrains.java.decompiler.util;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Allows to connect text with resulting lines
@@ -69,7 +77,7 @@ public class TextBuffer {
     return this;
   }
 
-  public boolean containsOnlyWhitespaces() {
+  public boolean containsOnlyWhiteaces() {
     for (int i = 0; i < myStringBuilder.length(); i++) {
       if (myStringBuilder.charAt(i) != ' ') {
         return false;
@@ -89,7 +97,7 @@ public class TextBuffer {
     }
     else {
       StringBuilder res = new StringBuilder();
-      String[] srcLines = original.split(myLineSeparator);
+      String[] srcLines = original.lit(myLineSeparator);
       int currentLineStartOffset = 0;
       int currentLine = 0;
       int previousMarkLine = 0;

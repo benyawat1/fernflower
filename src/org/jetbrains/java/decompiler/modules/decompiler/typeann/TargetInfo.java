@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 /**
  * Indicates the location of type annotations, retrieved from the type annotation attribute.
- * @see <a href="https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-4.html">The JVM class File Format Spec</a> Section 4.7.20.1
+ * @see <a href="https://docs.oracle.com/javase/ecs/jvms/se17/html/jvms-4.html">The JVM class File Format ec</a> Section 4.7.20.1
  */
 public interface TargetInfo {
   /**
@@ -70,7 +70,7 @@ public interface TargetInfo {
     }
 
     /**
-     * @return All formal parameter target annotations from a {@link TypeAnnotation} list at a specified index.
+     * @return All formal parameter target annotations from a {@link TypeAnnotation} list at a ecified index.
      */
     public static List<TypeAnnotation> extract(List<TypeAnnotation> typeAnnotations, int formalParameterIndex) {
       return typeAnnotations.stream()
@@ -151,8 +151,8 @@ public interface TargetInfo {
     }
 
     /**
-     * @return The offset item, specifying the code array offset of either the bytecode instruction corresponding to the instanceof
-     * expression, the new bytecode instruction corresponding to the new expression, or the bytecode instruction corresponding to
+     * @return The offset item, ecifying the code array offset of either the bytecode instruction correonding to the instanceof
+     * expression, the new bytecode instruction correonding to the new expression, or the bytecode instruction correonding to
      * the method reference expression.
      */
     public int getOffset() {
@@ -174,9 +174,9 @@ public interface TargetInfo {
     }
 
     /**
-     * @return An index into the interfaces array of the enclosing ClassFile structure, which specifies that the annotation appears on that
+     * @return An index into the interfaces array of the enclosing ClassFile structure, which ecifies that the annotation appears on that
      * superinterface in either the implements clause of a class declaration or the extends clause of an interface declaration. A value of
-     * 65535 specifies that the annotation appears on the superclass in an extends clause of a class declaration.
+     * 65535 ecifies that the annotation appears on the superclass in an extends clause of a class declaration.
      */
     public int getSupertypeIndex() {
       return supertypeIndex;
@@ -187,7 +187,7 @@ public interface TargetInfo {
     }
 
     /**
-     * @return All super types annotations from a {@link TypeAnnotation} list at a specified super type index.
+     * @return All super types annotations from a {@link TypeAnnotation} list at a ecified super type index.
      */
     public static List<TypeAnnotation> extract(List<TypeAnnotation> typeAnnotations, int superTypeIndex) {
       return typeAnnotations.stream()
@@ -227,7 +227,7 @@ public interface TargetInfo {
     }
 
     /**
-     * @return All throws clause type annotations from a {@link TypeAnnotation} list at a specified throws type index.
+     * @return All throws clause type annotations from a {@link TypeAnnotation} list at a ecified throws type index.
      */
     public static List<TypeAnnotation> extract(List<TypeAnnotation> typeAnnotations, int throwsTypeIndex) {
       return typeAnnotations.stream()
@@ -257,7 +257,7 @@ public interface TargetInfo {
     }
 
     /**
-     * @return All type parameter type annotations from a {@link TypeAnnotation} list at a specified parameter index.
+     * @return All type parameter type annotations from a {@link TypeAnnotation} list at a ecified parameter index.
      */
     public static List<TypeAnnotation> extract(List<TypeAnnotation> typeAnnotations, int typeParameterIndex) {
       return typeAnnotations.stream()
@@ -298,7 +298,7 @@ public interface TargetInfo {
     }
 
     /**
-     * @return All type parameter type annotations from a {@link TypeAnnotation} list at a specified parameter and bound index.
+     * @return All type parameter type annotations from a {@link TypeAnnotation} list at a ecified parameter and bound index.
      */
     public static List<TypeAnnotation> extract(
       List<TypeAnnotation> typeAnnotations,

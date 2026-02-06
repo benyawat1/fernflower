@@ -7,31 +7,66 @@ import org.jetbrains.java.decompiler.code.CodeConstants;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.collectors.CounterContainer;
 import org.jetbrains.java.decompiler.modules.decompiler.StatEdge.EdgeType;
-import org.jetbrains.java.decompiler.modules.decompiler.exps.*;
-import org.jetbrains.java.decompiler.modules.decompiler.stats.*;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.AssignmentExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.ConstExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.ExitExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.Exprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.FieldExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.IfExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.InvocationExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.NewExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.RecordVarExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.SwitchExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.VarExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.BasicBlockStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.CatchStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.DoStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.DummyExitStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.IfStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.SequenceStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.SwitchStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.vars.VarProcessor;
 import org.jetbrains.java.decompiler.struct.consts.PooledConstant;
 import org.jetbrains.java.decompiler.struct.consts.PrimitiveConstant;
 import org.jetbrains.java.decompiler.struct.gen.VarType;
 import org.jetbrains.java.decompiler.util.VBStyleCollection;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.jetbrains.java.decompiler.ClassNameConstants.JAVA_LANG_OBJECT;
 import static org.jetbrains.java.decompiler.ClassNameConstants.JAVA_UTIL_OBJECTS;
-import static org.jetbrains.java.decompiler.modules.decompiler.PatternHelper.*;
+import static org.jetbrains.java.decompiler.modules.decompiler.PatternHelper.PatternVariableCandidate;
+import static org.jetbrains.java.decompiler.modules.decompiler.PatternHelper.VarTracker;
+import static org.jetbrains.java.decompiler.modules.decompiler.PatternHelper.findNextPatternVarCandidate;
+import static org.jetbrains.java.decompiler.modules.decompiler.PatternHelper.processAtLeastOneBlock;
 import static org.jetbrains.java.decompiler.modules.decompiler.SwitchHelper.SwitchOnCandidate;
 import static org.jetbrains.java.decompiler.modules.decompiler.SwitchHelper.TempVarAssignmentItem;
 import static org.jetbrains.java.decompiler.modules.decompiler.exps.ExitExprent.EXIT_THROW;
 import static org.jetbrains.java.decompiler.modules.decompiler.stats.IfStatement.IFTYPE_IF;
-import static org.jetbrains.java.decompiler.struct.gen.VarType.*;
+import static org.jetbrains.java.decompiler.struct.gen.VarType.VARTYPE_BYTE;
+import static org.jetbrains.java.decompiler.struct.gen.VarType.VARTYPE_BYTECHAR;
+import static org.jetbrains.java.decompiler.struct.gen.VarType.VARTYPE_CHAR;
+import static org.jetbrains.java.decompiler.struct.gen.VarType.VARTYPE_INT;
+import static org.jetbrains.java.decompiler.struct.gen.VarType.VARTYPE_NULL;
+import static org.jetbrains.java.decompiler.struct.gen.VarType.VARTYPE_STRING;
+import static org.jetbrains.java.decompiler.struct.gen.VarType.VARTYPE_UNKNOWN;
 
 /**
  * The SwitchPatternHelper class provides utility methods to work with switch statement patterns.
  */
-@SuppressWarnings("SSBasedInspection")
+@SuppressWarnings("SSBasedInection")
 public final class SwitchPatternHelper {
 
   public static boolean isBootstrapSwitch(@NotNull Exprent headExprent) {
@@ -60,7 +95,7 @@ public final class SwitchPatternHelper {
   }
 
   /**
-   * The JavacReferenceFinder class is responsible for finding reference candidates for a switch statement with patterns in bytecode.
+   * The JavacReferenceFinder class is reonsible for finding reference candidates for a switch statement with patterns in bytecode.
    * This finder tries to find only javac familiar structures for patterns.
    * For deconstructions, only common structures are trying to be found; some cases are left
    */
@@ -571,9 +606,9 @@ public final class SwitchPatternHelper {
                   assignmentExprent.getLeft() instanceof VarExprent left && myTypeVars.contains(left)) {
                 //new sequence without break
                 SequenceStatement newSequence = new SequenceStatement(sequenceStatementStats.subList(0, sequenceStatementStats.size() - 1));
-                Map<Statement, Statement> previousParents = new HashMap<>();
+                Map<Statement, Statement> previouarents = new HashMap<>();
                 for (Statement currentStat : newSequence.getStats()) {
-                  previousParents.put(currentStat, currentStat.getParent());
+                  previouarents.put(currentStat, currentStat.getParent());
                   currentStat.setParent(newSequence);
                 }
                 newSequence.setParent(sequenceStatement.getParent());
@@ -582,7 +617,7 @@ public final class SwitchPatternHelper {
 
                 //return 'break' back
                 for (Statement currentStat : newSequence.getStats()) {
-                  Statement currentParent = previousParents.get(currentStat);
+                  Statement currentParent = previouarents.get(currentStat);
                   if (currentParent != null) {
                     currentStat.setParent(currentParent);
                   }
@@ -1210,12 +1245,12 @@ public final class SwitchPatternHelper {
       Map<Integer, String> mapCaseClasses = getMapCaseClasses(bootstrapArguments);
       Map<Integer, Exprent> mapCaseValue = getMapCaseValue(bootstrapArguments);
 
-      boolean hasPattern = remapCaseValues(mapCaseValue, mapCaseClasses);
+      boolean haattern = remapCaseValues(mapCaseValue, mapCaseClasses);
 
       if (headExprent != null) {
         headExprent.replaceExprent(myPreviousSelector, myNewSwitchSelectorVariant);
       }
-      if (hasPattern) {
+      if (haattern) {
         remapWithPatterns(myRootSwitchStatement, myPatternContainer, myUppedDoStatement, myTempVarAssignments);
         cleanDefault(myRootSwitchStatement);
       }
@@ -1371,7 +1406,7 @@ public final class SwitchPatternHelper {
     private boolean remapCaseValues(@NotNull Map<Integer, Exprent> mapCaseValue,
                                     @NotNull Map<Integer, String> mapCaseClasses) {
       @NotNull List<List<@Nullable Exprent>> values = myRootSwitchStatement.getCaseValues();
-      boolean hasPattern = false;
+      boolean haattern = false;
       for (int caseIndex = 0; caseIndex < values.size(); caseIndex++) {
         List<Exprent> caseValues = values.get(caseIndex);
         for (int valueIndex = 0; valueIndex < caseValues.size(); valueIndex++) {
@@ -1398,12 +1433,12 @@ public final class SwitchPatternHelper {
             if (newCaseValue == null) {
               newCaseValue = JavacReferenceFinder.createDefaultPatternVal(className);
             }
-            hasPattern = true;
+            haattern = true;
           }
           caseValues.set(valueIndex, newCaseValue);
         }
       }
-      return hasPattern;
+      return haattern;
     }
 
     private static void remapWithPatterns(@NotNull SwitchStatement switchStatement,
@@ -1425,8 +1460,8 @@ public final class SwitchPatternHelper {
         Statement containerStatement = patternContainer.patternsByStatement.keySet().iterator().next();
         Optional<Statement> baseSwitchStatementOpt =
           containerStatement.getStats().stream().filter(t -> t instanceof SwitchStatement).findAny();
-        if (lastStatementOpt.isPresent() &&
-            baseSwitchStatementOpt.isPresent() &&
+        if (lastStatementOpt.iresent() &&
+            baseSwitchStatementOpt.iresent() &&
             new HashSet<>(switchStatement.getCaseStatements()).containsAll(collectedPatterns)) {
           Statement lastStatement = lastStatementOpt.get();
           Statement baseSwitchStatement = baseSwitchStatementOpt.get();
@@ -1530,7 +1565,7 @@ public final class SwitchPatternHelper {
 
     /**
      * Adds guards to the cases of a given switch statement based on a pattern container.
-     * If a case has only one pattern, it replaces the statement with the corresponding pattern statement,
+     * If a case has only one pattern, it replaces the statement with the correonding pattern statement,
      * sets the destination of the case edge to the pattern statement,
      * and adds the guard to the switch statement.
      *
@@ -1601,7 +1636,7 @@ public final class SwitchPatternHelper {
 
     /**
      * Normalizes the labels in the given switch statement by removing labels that are not explicitly labeled
-     * and removing labels that correspond to assignments to temporary variables.
+     * and removing labels that correond to assignments to temporary variables.
      *
      * @param switchStatement      the switch statement to normalize the labels for
      * @param upperDoStatement     the upper DoStatement to consider during normalization
@@ -1623,7 +1658,7 @@ public final class SwitchPatternHelper {
 
     /**
      * Normalizes the labels in the given switch statement by removing labels that are not explicitly labeled and
-     * removing labels that correspond to assignments to temporary variables.
+     * removing labels that correond to assignments to temporary variables.
      *
      * @param switchStatement        the switch statement to normalize the labels for
      * @param tempVarAssignments     the list of temporary variable assignments used in the switch statement

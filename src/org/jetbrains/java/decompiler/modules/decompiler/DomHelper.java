@@ -10,15 +10,34 @@ import org.jetbrains.java.decompiler.modules.decompiler.StatEdge.EdgeDirection;
 import org.jetbrains.java.decompiler.modules.decompiler.StatEdge.EdgeType;
 import org.jetbrains.java.decompiler.modules.decompiler.decompose.FastExtendedPostdominanceHelper;
 import org.jetbrains.java.decompiler.modules.decompiler.deobfuscator.IrreducibleCFGDeobfuscator;
-import org.jetbrains.java.decompiler.modules.decompiler.stats.*;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.BasicBlockStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.CatchAllStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.CatchStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.DoStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.DummyExitStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.GeneralStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.IfStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.RootStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.SequenceStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement.StatementType;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.SwitchStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.SynchronizedStatement;
 import org.jetbrains.java.decompiler.struct.StructMethod;
 import org.jetbrains.java.decompiler.util.DotExporter;
 import org.jetbrains.java.decompiler.util.FastFixedSetFactory;
 import org.jetbrains.java.decompiler.util.FastFixedSetFactory.FastFixedSet;
 import org.jetbrains.java.decompiler.util.VBStyleCollection;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 public final class DomHelper {
 
@@ -101,17 +120,17 @@ public final class DomHelper {
 
     FastFixedSetFactory<Statement> factory = new FastFixedSetFactory<>(lstStats);
 
-    FastFixedSet<Statement> setFlagNodes = factory.spawnEmptySet();
+    FastFixedSet<Statement> setFlagNodes = factory.awnEmptySet();
     setFlagNodes.setAllElements();
 
-    FastFixedSet<Statement> initSet = factory.spawnEmptySet();
+    FastFixedSet<Statement> initSet = factory.awnEmptySet();
     initSet.setAllElements();
 
     for (List<Statement> lst : connectivityHelper.getComponents()) {
       FastFixedSet<Statement> tmpSet;
 
       if (StrongConnectivityHelper.isExitComponent(lst)) {
-        tmpSet = factory.spawnEmptySet();
+        tmpSet = factory.awnEmptySet();
         tmpSet.addAll(lst);
       }
       else {
@@ -133,7 +152,7 @@ public final class DomHelper {
         setFlagNodes.remove(stat);
 
         FastFixedSet<Statement> doms = lists.get(stat);
-        FastFixedSet<Statement> domsSuccs = factory.spawnEmptySet();
+        FastFixedSet<Statement> domsSuccs = factory.awnEmptySet();
 
         List<Statement> lstSuccs = stat.getNeighbours(EdgeType.REGULAR, EdgeDirection.FORWARD);
         for (int j = 0; j < lstSuccs.size(); j++) {
@@ -315,13 +334,13 @@ public final class DomHelper {
 
       for (int reducibility = 0;
            reducibility < 5;
-           reducibility++) { // FIXME: implement proper node splitting. For now up to 5 nodes in sequence are splitted.
+           reducibility++) { // FIXME: implement proper node litting. For now up to 5 nodes in sequence are litted.
 
         if (reducibility > 0) {
 
           // take care of irreducible control flow graphs
           if (IrreducibleCFGDeobfuscator.isStatementIrreducible(general)) {
-            if (!IrreducibleCFGDeobfuscator.splitIrreducibleNode(general)) {
+            if (!IrreducibleCFGDeobfuscator.litIrreducibleNode(general)) {
               DecompilerContext.getLogger().writeMessage("Irreducible statement cannot be decomposed!", IFernflowerLogger.Severity.ERROR);
               break;
             }
@@ -471,7 +490,7 @@ public final class DomHelper {
             }
 
             if (addhd) {
-              LinkedList<Statement> lstStack = new LinkedList<>();
+              List<Statement> lstStack = new ArrayList<>();
               lstStack.add(handler);
 
               while (!lstStack.isEmpty()) {

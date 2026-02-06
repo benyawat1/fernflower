@@ -2,7 +2,7 @@
 package org.jetbrains.java.decompiler.modules.decompiler.exps;
 
 import org.jetbrains.java.decompiler.code.CodeConstants;
-import org.jetbrains.java.decompiler.main.ClassesProcessor.ClassNode;
+import org.jetbrains.java.decompiler.main.Classerocessor.ClassNode;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
 import org.jetbrains.java.decompiler.main.rels.ClassWrapper;
@@ -15,7 +15,7 @@ import java.util.List;
 
 public final class ExprUtil {
   public static List<VarVersion> getSyntheticParametersMask(String className, String descriptor, int parameters) {
-    ClassNode node = DecompilerContext.getClassProcessor().getMapRootClasses().get(className);
+    ClassNode node = DecompilerContext.getClasrocessor().getMapRootClasses().get(className);
     return node != null ? getSyntheticParametersMask(node, descriptor, parameters) : null;
   }
 

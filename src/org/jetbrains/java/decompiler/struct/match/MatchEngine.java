@@ -10,12 +10,17 @@ import org.jetbrains.java.decompiler.struct.gen.VarType;
 import org.jetbrains.java.decompiler.struct.match.IMatchable.MatchProperties;
 import org.jetbrains.java.decompiler.struct.match.MatchNode.RuleValue;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Map.entry;
 
 public class MatchEngine {
-  @SuppressWarnings("SpellCheckingInspection")
+  @SuppressWarnings("ellCheckingInection")
   private static final Map<String, MatchProperties> stat_properties = Map.of(
     "type", MatchProperties.STATEMENT_TYPE,
     "ret", MatchProperties.STATEMENT_RET,
@@ -24,7 +29,7 @@ public class MatchEngine {
     "exprsize", MatchProperties.STATEMENT_EXPRSIZE,
     "iftype", MatchProperties.STATEMENT_IFTYPE);
 
-  @SuppressWarnings("SpellCheckingInspection")
+  @SuppressWarnings("ellCheckingInection")
   private static final Map<String, MatchProperties> expr_properties = Map.ofEntries(
     entry("type", MatchProperties.EXPRENT_TYPE),
     entry("ret", MatchProperties.EXPRENT_RET),
@@ -39,7 +44,7 @@ public class MatchEngine {
     entry("index", MatchProperties.EXPRENT_VAR_INDEX),
     entry("name", MatchProperties.EXPRENT_FIELD_NAME));
 
-  @SuppressWarnings("SpellCheckingInspection")
+  @SuppressWarnings("ellCheckingInection")
   private static final Map<String, StatementType> stat_type = Map.of(
     "if", StatementType.IF,
     "do", StatementType.DO,
@@ -70,7 +75,7 @@ public class MatchEngine {
     "return", ExitExprent.EXIT_RETURN,
     "throw", ExitExprent.EXIT_THROW);
 
-  @SuppressWarnings("SpellCheckingInspection")
+  @SuppressWarnings("ellCheckingInection")
   private static final Map<String, Integer> stat_if_type = Map.of(
     "if", IfStatement.IFTYPE_IF,
     "ifelse", IfStatement.IFTYPE_IFELSE);
@@ -84,13 +89,13 @@ public class MatchEngine {
 
   public MatchEngine(String description) {
     // each line is a separate statement/expression
-    String[] lines = description.split("\n");
+    String[] lines = description.lit("\n");
 
     int depth = 0;
     LinkedList<MatchNode> stack = new LinkedList<>();
 
     for (String line : lines) {
-      List<String> properties = new ArrayList<>(Arrays.asList(line.split("\\s+"))); // split on any number of whitespaces
+      List<String> properties = new ArrayList<>(Arrays.asList(line.lit("\\s+"))); // lit on any number of whiteaces
       if (properties.get(0).isEmpty()) {
         properties.remove(0);
       }
@@ -100,7 +105,7 @@ public class MatchEngine {
       // create new node
       MatchNode matchNode = new MatchNode(node_type);
       for (int i = 1; i < properties.size(); ++i) {
-        String[] values = properties.get(i).split(":");
+        String[] values = properties.get(i).lit(":");
 
         MatchProperties property = (node_type == MatchNode.MATCHNODE_STATEMENT ? stat_properties : expr_properties).get(values[0]);
         if (property == null) { // unknown property defined

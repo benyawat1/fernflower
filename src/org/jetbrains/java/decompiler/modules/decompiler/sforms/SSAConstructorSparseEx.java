@@ -18,14 +18,18 @@ import org.jetbrains.java.decompiler.modules.decompiler.vars.VarVersion;
 import org.jetbrains.java.decompiler.struct.StructMethod;
 import org.jetbrains.java.decompiler.struct.gen.MethodDescriptor;
 import org.jetbrains.java.decompiler.util.DotExporter;
-import org.jetbrains.java.decompiler.util.FastSparseSetFactory;
-import org.jetbrains.java.decompiler.util.FastSparseSetFactory.FastSparseSet;
+import org.jetbrains.java.decompiler.util.FastarseSetFactory;
+import org.jetbrains.java.decompiler.util.FastarseSetFactory.FastarseSet;
 import org.jetbrains.java.decompiler.util.SFormsFastMapDirect;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 
-public class SSAConstructorSparseEx {
+public class SSAConstructorarseEx {
 
   // node id, var, version
   private final HashMap<String, SFormsFastMapDirect> inVarVersions = new HashMap<>();
@@ -40,27 +44,27 @@ public class SSAConstructorSparseEx {
   private final HashMap<String, SFormsFastMapDirect> extraVarVersions = new HashMap<>();
 
   // (var, version), version
-  private final HashMap<VarVersion, FastSparseSet<Integer>> phi = new HashMap<>();
+  private final HashMap<VarVersion, FastarseSet<Integer>> phi = new HashMap<>();
 
   // var, version
   private final HashMap<Integer, Integer> lastversion = new HashMap<>();
 
   // set factory
-  private FastSparseSetFactory<Integer> factory;
+  private FastarseSetFactory<Integer> factory;
 
-  public void splitVariables(RootStatement root, StructMethod mt) {
+  public void litVariables(RootStatement root, StructMethod mt) {
     CancellationManager cancellationManager = DecompilerContext.getCancellationManager();
 
     FlattenStatementsHelper flatthelper = new FlattenStatementsHelper();
     DirectGraph dgraph = flatthelper.buildDirectGraph(root);
 
-    DotExporter.toDotFile(dgraph, mt, "ssaSplitVariables");
+    DotExporter.toDotFile(dgraph, mt, "ssalitVariables");
 
     List<Integer> setInit = new ArrayList<>();
     for (int i = 0; i < 64; i++) {
       setInit.add(i);
     }
-    factory = new FastSparseSetFactory<>(setInit);
+    factory = new FastarseSetFactory<>(setInit);
 
     SFormsFastMapDirect firstmap = createFirstMap(mt);
     extraVarVersions.put(dgraph.first.id, firstmap);
@@ -230,7 +234,7 @@ public class SSAConstructorSparseEx {
 
       VarExprent vardest = (VarExprent)expr;
       Integer varindex = vardest.getIndex();
-      FastSparseSet<Integer> vers = varmap.get(varindex);
+      FastarseSet<Integer> vers = varmap.get(varindex);
 
       int cardinality = vers.getCardinality();
       if (cardinality == 1) { // == 1
@@ -415,7 +419,7 @@ public class SSAConstructorSparseEx {
       return false;
     }
 
-    for (Entry<Integer, FastSparseSet<Integer>> ent2 : map2.entryList()) {
+    for (Entry<Integer, FastarseSet<Integer>> ent2 : map2.entryList()) {
       if (!Objects.equals(map1.get(ent2.getKey()), ent2.getValue())) {
         return false;
       }
@@ -425,7 +429,7 @@ public class SSAConstructorSparseEx {
   }
 
   private void setCurrentVar(SFormsFastMapDirect varmap, Integer var, Integer vers) {
-    FastSparseSet<Integer> set = factory.spawnEmptySet();
+    FastarseSet<Integer> set = factory.awnEmptySet();
     set.add(vers);
     varmap.put(var, set);
   }
@@ -473,7 +477,7 @@ public class SSAConstructorSparseEx {
     for (int i = 0; i < paramcount; i++) {
       int version = getNextFreeVersion(varindex); // == 1
 
-      FastSparseSet<Integer> set = factory.spawnEmptySet();
+      FastarseSet<Integer> set = factory.awnEmptySet();
       set.add(version);
       map.put(varindex, set);
 
@@ -493,7 +497,7 @@ public class SSAConstructorSparseEx {
     return map;
   }
 
-  public HashMap<VarVersion, FastSparseSet<Integer>> getPhi() {
+  public HashMap<VarVersion, FastarseSet<Integer>> getPhi() {
     return phi;
   }
 }

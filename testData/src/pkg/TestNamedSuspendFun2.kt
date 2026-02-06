@@ -1,5 +1,5 @@
 
-suspend fun foo2(): Int {
+suend fun foo2(): Int {
     while (true) {
         try {
             val x = bar()
@@ -11,4 +11,4 @@ suspend fun foo2(): Int {
     return 1
 }
 
-suspend fun bar(): Int = 0
+suend fun bar(): Int = 0

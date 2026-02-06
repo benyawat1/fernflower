@@ -28,7 +28,7 @@ public class KotlinSingleClassesTest extends SingleClassesTestBase {
                   IFernflowerPreferences.CHECK_CLOSABLE_INTERFACE, "0",
                   IFernflowerPreferences.HIDE_RECORD_CONSTRUCTOR_AND_GETTERS, "0",
                   IFernflowerPreferences.REMOVE_SYNTHETIC, "0"
-                  //IFernflowerPreferences.INCLUDE_ENTIRE_CLASSPATH, "1"
+                  //IFernflowerPreferences.INCLUDE_ENTIRE_CLASATH, "1"
     );
   }
 @Test public void testKotlinConstructor() { doTest("pkg/TestKotlinConstructorKt"); }

@@ -58,7 +58,7 @@ public class VBStyleCollection<E, K> extends ArrayList<E> {
     lstKeys.add(key);
   }
 
-  // TODO: speed up the method
+  // TODO: eed up the method
   public E putWithKey(E element, K key) {
     Integer index = map.get(key);
     if (index == null) {

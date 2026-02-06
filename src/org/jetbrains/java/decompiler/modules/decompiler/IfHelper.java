@@ -12,7 +12,11 @@ import org.jetbrains.java.decompiler.modules.decompiler.stats.SequenceStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement.StatementType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public final class IfHelper {
   public static boolean mergeAllIfs(RootStatement root) {
@@ -432,12 +436,12 @@ public final class IfHelper {
     elsedirect = !last.getAllSuccessorEdges().isEmpty() && last.getAllSuccessorEdges().get(0).getType() == EdgeType.FINALLY_EXIT ||
                  hasDirectEndEdge(last, from);
 
-    if (!noelsestat && existsPath(ifstat, ifstat.getAllSuccessorEdges().get(0).getDestination())) {
+    if (!noelsestat && existath(ifstat, ifstat.getAllSuccessorEdges().get(0).getDestination())) {
       return false;
     }
 
     if (!ifdirect && !noifstat) {
-      ifdirectpath = existsPath(ifstat, next);
+      ifdirectpath = existath(ifstat, next);
     }
 
     if (!elsedirect && !noelsestat) {
@@ -448,7 +452,7 @@ public final class IfHelper {
         if (sttemp == ifstat) {
           break;
         }
-        else if (existsPath(sttemp, next)) {
+        else if (existath(sttemp, next)) {
           elsedirectpath = true;
           break;
         }
@@ -675,7 +679,7 @@ public final class IfHelper {
     return getNextStatement(parent);
   }
 
-  private static boolean existsPath(Statement from, Statement to) {
+  private static boolean existath(Statement from, Statement to) {
     for (StatEdge edge : to.getAllPredecessorEdges()) {
       if (from.containsStatementStrict(edge.getSource())) {
         return true;

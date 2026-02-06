@@ -38,7 +38,7 @@ public interface IFernflowerPreferences {
   String CONVERT_PATTERN_SWITCH = "cps";
 
   String STANDARDIZE_FLOATING_POINT_NUMBERS = "sfn";
-  String INCLUDE_ENTIRE_CLASSPATH = "iec";
+  String INCLUDE_ENTIRE_CLASATH = "iec";
   String INLINE_SIMPLE_LAMBDAS = "isl";
   String HIDE_RECORD_CONSTRUCTOR_AND_GETTERS = "ucrc";
 
@@ -101,7 +101,7 @@ public interface IFernflowerPreferences {
     defaults.put(CONVERT_PATTERN_SWITCH, "0");
 
     defaults.put(STANDARDIZE_FLOATING_POINT_NUMBERS, "0");
-    defaults.put(INCLUDE_ENTIRE_CLASSPATH, "0");
+    defaults.put(INCLUDE_ENTIRE_CLASATH, "0");
     defaults.put(CHECK_CLOSABLE_INTERFACE, "1");
     defaults.put(INLINE_SIMPLE_LAMBDAS, "1");
     defaults.put(HIDE_RECORD_CONSTRUCTOR_AND_GETTERS, "1");

@@ -18,8 +18,17 @@ import org.jetbrains.java.decompiler.struct.gen.VarType;
 import org.jetbrains.java.decompiler.util.StatementIterator;
 import org.jetbrains.java.decompiler.util.TextUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class VarProcessor {
@@ -37,7 +46,7 @@ public class VarProcessor {
   private Map<VarVersion, String> mapVarNames = new HashMap<>();
   private final Map<VarVersion, String> mapPurgedAssignmentNames = new HashMap<>();
   private final Map<VarVersion, LocalVariable> mapVarLVTs = new HashMap<>();
-  private VarVersionsProcessor varVersions;
+  private VarVersionrocessor varVersions;
   private final Map<VarVersion, String> thisVars = new HashMap<>();
   private final Set<VarVersion> externalVars = new HashSet<>();
   private final BitSet finalParameters = new BitSet();
@@ -55,8 +64,8 @@ public class VarProcessor {
   }
 
   public void setVarVersions(RootStatement root) {
-    VarVersionsProcessor oldProcessor = varVersions;
-    varVersions = new VarVersionsProcessor(method, methodDescriptor);
+    VarVersionrocessor oldProcessor = varVersions;
+    varVersions = new VarVersionrocessor(method, methodDescriptor);
     varVersions.setVarVersions(root, oldProcessor);
   }
 
@@ -204,7 +213,7 @@ public class VarProcessor {
     return externalVars;
   }
 
-  public boolean isParameterFinal(VarVersion pair) {
+  public boolean iarameterFinal(VarVersion pair) {
     return finalParameters.get(pair.var);
   }
 
@@ -246,7 +255,7 @@ public class VarProcessor {
   }
 
 
-  public VarVersionsProcessor getVarVersions() {
+  public VarVersionrocessor getVarVersions() {
     return varVersions;
   }
 

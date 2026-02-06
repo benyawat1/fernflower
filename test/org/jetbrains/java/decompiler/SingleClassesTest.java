@@ -91,7 +91,7 @@ public class SingleClassesTest extends SingleClassesTestBase {
   @Test public void testJava9PrivateInterfaceMethod() { doTest("java9/TestJava9PrivateInterfaceMethod"); }
   @Test public void testJava11StringConcat() { doTest("java11/TestJava11StringConcat"); }
   @Test public void testJava11StringConcatEmptyAffix() { doTest("java11/TestJava11StringConcatEmptyAffix"); }
-  @Test public void testJava11StringConcatSpecialChars() { doTest("java11/TestJava11StringConcatSpecialChars"); }
+  @Test public void testJava11StringConcatecialChars() { doTest("java11/TestJava11StringConcatecialChars"); }
   @Test public void testMethodReferenceSameName() { doTest("pkg/TestMethodReferenceSameName"); }
   @Test public void testMethodReferenceLetterClass() { doTest("pkg/TestMethodReferenceLetterClass"); }
   @Test public void testConstructorReference() { doTest("pkg/TestConstructorReference"); }
@@ -104,8 +104,8 @@ public class SingleClassesTest extends SingleClassesTestBase {
   @Test public void testIffSimplification() { doTest("pkg/TestIffSimplification"); }
   @Test public void testAsserts() { doTest("pkg/TestAsserts"); }
   @Test public void testLocalsNames() { doTest("pkg/TestLocalsNames"); }
-  @Test public void testAnonymousParamNames() { doTest("pkg/TestAnonymousParamNames"); }
-  @Test public void testAnonymousParams() { doTest("pkg/TestAnonymousParams"); }
+  @Test public void testAnonymouaramNames() { doTest("pkg/TestAnonymouaramNames"); }
+  @Test public void testAnonymouarams() { doTest("pkg/TestAnonymouarams"); }
   @Test public void testAccessReplace() { doTest("pkg/TestAccessReplace"); }
   @Test public void testStringLiterals() { doTest("pkg/TestStringLiterals"); }
   @Test public void testPrimitives() { doTest("pkg/TestPrimitives"); }
@@ -160,8 +160,8 @@ public class SingleClassesTest extends SingleClassesTestBase {
   @Test public void testGroovyClass() { doTest("pkg/TestGroovyClass"); }
   @Test public void testGroovyTrait() { doTest("pkg/TestGroovyTrait"); }
   @Test public void testPrivateClasses() { doTest("pkg/PrivateClasses"); }
-  @Test public void testSuspendLambda() { doTest("pkg/TestSuspendLambdaKt"); }
-  @Test public void testNamedSuspendFun2Kt() { doTest("pkg/TestNamedSuspendFun2Kt"); }
+  @Test public void testSuendLambda() { doTest("pkg/TestSuendLambdaKt"); }
+  @Test public void testNamedSuendFun2Kt() { doTest("pkg/TestNamedSuendFun2Kt"); }
   @Test public void testGenericArgs() { doTest("pkg/TestGenericArgs"); }
   @Test public void testRecordEmpty() { doTest("records/TestRecordEmpty"); }
   @Test public void testRecordSimple() { doTest("records/TestRecordSimple"); }
@@ -259,8 +259,8 @@ public class SingleClassesTest extends SingleClassesTestBase {
   @Test public void testNestedCalls() { doTest("pkg/TestNestedCalls"); }
   @Test public void testBreakpointsContextProvider() { doTest("com/intellij/tasks/context/java/BreakpointsContextProvider"); }
   @Test public void testAnnotationsForParametersWithNestedClass() { doTest("pkg/TestAnnotationsForParametersWithNestedClass"); }
-  @Test public void testNestedTypeAnnotationsParameters() {
-    doTest("typeAnnotations/NestedTypeAnnotationsParameters",
+  @Test public void testNestedTypeAnnotationarameters() {
+    doTest("typeAnnotations/NestedTypeAnnotationarameters",
            "typeAnnotations/A", "typeAnnotations/B", "typeAnnotations/C", "typeAnnotations/D", "typeAnnotations/E",
            "typeAnnotations/F", "typeAnnotations/Z", "typeAnnotations/P", "typeAnnotations/S", "typeAnnotations/T");
   }

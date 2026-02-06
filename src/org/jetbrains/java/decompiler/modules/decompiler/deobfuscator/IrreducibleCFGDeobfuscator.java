@@ -96,11 +96,11 @@ public final class IrreducibleCFGDeobfuscator {
   }
 
 
-  private static Statement getCandidateForSplitting(Statement statement) {
+  private static Statement getCandidateForlitting(Statement statement) {
 
-    Statement candidateForSplitting = null;
-    int sizeCandidateForSplitting = Integer.MAX_VALUE;
-    int succsCandidateForSplitting = Integer.MAX_VALUE;
+    Statement candidateForlitting = null;
+    int sizeCandidateForlitting = Integer.MAX_VALUE;
+    int succsCandidateForlitting = Integer.MAX_VALUE;
 
     for (Statement stat : statement.getStats()) {
 
@@ -108,52 +108,52 @@ public final class IrreducibleCFGDeobfuscator {
 
       if (setPreds.size() > 1) {
         int succCount = stat.getNeighboursSet(EdgeType.REGULAR, EdgeDirection.FORWARD).size();
-        if (succCount <= succsCandidateForSplitting) {
+        if (succCount <= succsCandidateForlitting) {
           int size = getStatementSize(stat) * (setPreds.size() - 1);
 
-          if (succCount < succsCandidateForSplitting ||
-              size < sizeCandidateForSplitting) {
-            candidateForSplitting = stat;
-            sizeCandidateForSplitting = size;
-            succsCandidateForSplitting = succCount;
+          if (succCount < succsCandidateForlitting ||
+              size < sizeCandidateForlitting) {
+            candidateForlitting = stat;
+            sizeCandidateForlitting = size;
+            succsCandidateForlitting = succCount;
           }
         }
       }
     }
 
-    return candidateForSplitting;
+    return candidateForlitting;
   }
 
-  public static boolean splitIrreducibleNode(Statement statement) {
+  public static boolean litIrreducibleNode(Statement statement) {
 
-    Statement splitnode = getCandidateForSplitting(statement);
-    if (splitnode == null) {
+    Statement litnode = getCandidateForlitting(statement);
+    if (litnode == null) {
       return false;
     }
 
-    StatEdge enteredge = splitnode.getPredecessorEdges(EdgeType.REGULAR).iterator().next();
+    StatEdge enteredge = litnode.getPredecessorEdges(EdgeType.REGULAR).iterator().next();
 
     // copy the smallest statement
-    Statement splitcopy = copyStatement(splitnode, null, new HashMap<>());
-    initCopiedStatement(splitcopy);
+    Statement litcopy = copyStatement(litnode, null, new HashMap<>());
+    initCopiedStatement(litcopy);
 
     // insert the copy
-    splitcopy.setParent(statement);
-    statement.getStats().addWithKey(splitcopy, splitcopy.id);
+    litcopy.setParent(statement);
+    statement.getStats().addWithKey(litcopy, litcopy.id);
 
     // switch input edges
-    for (StatEdge prededge : splitnode.getPredecessorEdges(EdgeType.DIRECT_ALL)) {
+    for (StatEdge prededge : litnode.getPredecessorEdges(EdgeType.DIRECT_ALL)) {
       if (prededge.getSource() == enteredge.getSource() ||
           prededge.closure == enteredge.getSource()) {
-        splitnode.removePredecessor(prededge);
-        prededge.getSource().changeEdgeNode(EdgeDirection.FORWARD, prededge, splitcopy);
-        splitcopy.addPredecessor(prededge);
+        litnode.removePredecessor(prededge);
+        prededge.getSource().changeEdgeNode(EdgeDirection.FORWARD, prededge, litcopy);
+        litcopy.addPredecessor(prededge);
       }
     }
 
     // connect successors
-    for (StatEdge succ : splitnode.getSuccessorEdges(EdgeType.DIRECT_ALL)) {
-      splitcopy.addSuccessor(new StatEdge(succ.getType(), splitcopy, succ.getDestination(), succ.closure));
+    for (StatEdge succ : litnode.getSuccessorEdges(EdgeType.DIRECT_ALL)) {
+      litcopy.addSuccessor(new StatEdge(succ.getType(), litcopy, succ.getDestination(), succ.closure));
     }
 
     return true;

@@ -4,7 +4,7 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class TestAnonymousParams {
+public class TestAnonymouarams {
    void foo(InputStream in, final int a) throws IOException {
       FilterInputStream filterInputStream = new FilterInputStream(in) {// 24
          public int read() throws IOException {
@@ -15,7 +15,7 @@ public class TestAnonymousParams {
    }// 31
 }
 
-class 'pkg/TestAnonymousParams$1' {
+class 'pkg/TestAnonymouarams$1' {
    method 'read ()I' {
       1      10
       2      10
@@ -24,7 +24,7 @@ class 'pkg/TestAnonymousParams$1' {
    }
 }
 
-class 'pkg/TestAnonymousParams' {
+class 'pkg/TestAnonymouarams' {
    method 'foo (Ljava/io/InputStream;I)V' {
       5      8
       a      8

@@ -39,9 +39,9 @@ public class ConverterHelperTest {
   @Test public void testKeywordFieldName() { doTestFieldName("public", VALID_FIELD_DESCRIPTOR, true); }
   @Test public void testKeywordMethodName() { doTestMethodName("public", VALID_METHOD_DESCRIPTOR, true); }
 
-  @Test public void testReservedWindowsNamespaceClassName() { doTestClassName("nul", true); }
-  @Test public void testReservedWindowsNamespaceFieldName() { doTestFieldName("nul", VALID_FIELD_DESCRIPTOR, false); }
-  @Test public void testReservedWindowsNamespaceName() { doTestMethodName("nul", VALID_METHOD_DESCRIPTOR, false); }
+  @Test public void testReservedWindowsNameaceClassName() { doTestClassName("nul", true); }
+  @Test public void testReservedWindowsNameaceFieldName() { doTestFieldName("nul", VALID_FIELD_DESCRIPTOR, false); }
+  @Test public void testReservedWindowsNameaceName() { doTestMethodName("nul", VALID_METHOD_DESCRIPTOR, false); }
 
   @Test public void testLeadingDigitClassName() { doTestClassName("4identifier", true); }
   @Test public void testLeadingDigitFieldName() { doTestFieldName("4identifier", VALID_FIELD_DESCRIPTOR, true); }

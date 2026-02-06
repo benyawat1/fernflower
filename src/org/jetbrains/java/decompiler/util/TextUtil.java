@@ -2,7 +2,7 @@
 package org.jetbrains.java.decompiler.util;
 
 import org.jetbrains.java.decompiler.code.CodeConstants;
-import org.jetbrains.java.decompiler.main.ClassesProcessor;
+import org.jetbrains.java.decompiler.main.Classerocessor;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
 import org.jetbrains.java.decompiler.modules.decompiler.ExprProcessor;
@@ -18,7 +18,7 @@ public final class TextUtil {
     "const", "for", "new", "switch", "continue", "goto", "package", "synchronized", "true", "false", "null", "assert"));
 
   public static void writeQualifiedSuper(TextBuffer buf, String qualifier) {
-    ClassesProcessor.ClassNode classNode = (ClassesProcessor.ClassNode)DecompilerContext.getProperty(DecompilerContext.CURRENT_CLASS_NODE);
+    Classerocessor.ClassNode classNode = (Classerocessor.ClassNode)DecompilerContext.getProperty(DecompilerContext.CURRENT_CLASS_NODE);
     if (!qualifier.equals(classNode.classStruct.qualifiedName)) {
       buf.append(DecompilerContext.getImportCollector().getNestedName(ExprProcessor.buildJavaClassName(qualifier))).append('.');
     }
@@ -37,7 +37,7 @@ public final class TextUtil {
     while (times-- > 0) buf.append(string);
   }
 
-  public static boolean isPrintableUnicode(char c) {
+  public static boolean irintableUnicode(char c) {
     int t = Character.getType(c);
     return t != Character.UNASSIGNED && t != Character.LINE_SEPARATOR && t != Character.PARAGRAPH_SEPARATOR &&
            t != Character.CONTROL && t != Character.FORMAT && t != Character.PRIVATE_USE && t != Character.SURROGATE;
@@ -259,7 +259,7 @@ public final class TextUtil {
     "getfield",
     "putfield",
     "invokevirtual",
-    "invokespecial",
+    "invokeecial",
     "invokestatic",
     "invokeinterface",
     "invokedynamic",  // since Java 7

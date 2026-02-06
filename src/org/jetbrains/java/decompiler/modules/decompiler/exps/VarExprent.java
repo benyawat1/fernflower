@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.java.decompiler.code.CodeConstants;
 import org.jetbrains.java.decompiler.main.ClassWriter;
-import org.jetbrains.java.decompiler.main.ClassesProcessor.ClassNode;
+import org.jetbrains.java.decompiler.main.Classerocessor.ClassNode;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.collectors.BytecodeMappingTracer;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
@@ -114,7 +114,7 @@ public class VarExprent extends Exprent {
     tracer.addMapping(bytecode);
 
     if (classDef) {
-      ClassNode child = DecompilerContext.getClassProcessor().getMapRootClasses().get(varType.getValue());
+      ClassNode child = DecompilerContext.getClasrocessor().getMapRootClasses().get(varType.getValue());
       new ClassWriter().classToJava(child, buffer, indent, tracer);
       tracer.incrementCurrentSourceLine(buffer.countLines());
     }
@@ -317,7 +317,9 @@ public class VarExprent extends Exprent {
 
   public String getName() {
     VarVersion varVersion = getVarVersion();
-    if (lvtEntry != null && TextUtil.isValidIdentifier(lvtEntry.getName(), CodeConstants.BYTECODE_JAVA_22))
+    if (lvtEntry != null &&
+        DecompilerContext.getOption(IFernflowerPreferences.USE_DEBUG_VAR_NAMES) &&
+        TextUtil.isValidIdentifier(lvtEntry.getName(), CodeConstants.BYTECODE_JAVA_22))
       return lvtEntry.getName();
 
     if (processor != null) {

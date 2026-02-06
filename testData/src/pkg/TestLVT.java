@@ -13,15 +13,15 @@ public class TestLVT {
       String scope2 = "scope2";
       String scope2a = "scope2a";
       List<Object> noise = new ArrayList<Object>();
-      String spam = scope1 + scope2 + scope2a + i + noise;
-      System.out.println(spam);
+      String am = scope1 + scope2 + scope2a + i + noise;
+      System.out.println(am);
     }
     for (long i=0; i<10; i++) {
       String scope2 = "scope2+1";
       String scope2a = "scope2+1a";
       Map<Object,Object> noise = new HashMap<Object,Object>();
-      String spam = scope1a + scope2 + scope2a + i + noise;
-      System.out.println(spam);
+      String am = scope1a + scope2 + scope2a + i + noise;
+      System.out.println(am);
     }
   }
 

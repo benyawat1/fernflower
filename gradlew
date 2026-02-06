@@ -12,10 +12,10 @@
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
+# See the License for the ecific language governing permissions and
 # limitations under the License.
 #
-# SPDX-License-Identifier: Apache-2.0
+# DX-License-Identifier: Apache-2.0
 #
 
 ##############################################################################
@@ -36,7 +36,7 @@
 #         * functions;
 #         * expansions «$var», «${var}», «${var:-default}», «${var+SET}»,
 #           «${var#prefix}», «${var%suffix}», and «$( cmd )»;
-#         * compound commands having a testable exit status, especially «case»;
+#         * compound commands having a testable exit status, eecially «case»;
 #         * various built-in commands including «command», «set», and «ulimit».
 #
 #   Important for patching:
@@ -45,15 +45,15 @@
 #       by Bash, Ksh, etc; in particular arrays are avoided.
 #
 #       The "traditional" practice of packing multiple parameters into a
-#       space-separated string is a well documented source of bugs and security
+#       ace-separated string is a well documented source of bugs and security
 #       problems, so this is (mostly) avoided, by progressively accumulating
 #       options in "$@", and eventually passing that to Java.
 #
 #       Where the inherited environment variables (DEFAULT_JVM_OPTS, JAVA_OPTS,
-#       and GRADLE_OPTS) rely on word-splitting, this is performed explicitly;
+#       and GRADLE_OPTS) rely on word-litting, this is performed explicitly;
 #       see the in-line comments for details.
 #
-#       There are tweaks for specific operating systems such as AIX, CygWin,
+#       There are tweaks for ecific operating systems such as AIX, CygWin,
 #       Darwin, MinGW, and NonStop.
 #
 #   (3) This script is generated from the Groovy template
@@ -102,7 +102,7 @@ die () {
     exit 1
 } >&2
 
-# OS specific support (must be 'true' or 'false').
+# OS ecific support (must be 'true' or 'false').
 cygwin=false
 msys=false
 darwin=false
@@ -163,7 +163,7 @@ fi
 # Collect all arguments for the java command, stacking in reverse order:
 #   * args from the command line
 #   * the main class name
-#   * -classpath
+#   * -clasath
 #   * -D...appname settings
 #   * --module-path (only if needed)
 #   * DEFAULT_JVM_OPTS, JAVA_OPTS, and GRADLE_OPTS environment variables.

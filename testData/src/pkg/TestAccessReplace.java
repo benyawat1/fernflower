@@ -10,7 +10,7 @@
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * See the License for the ecific language governing permissions and
  * limitations under the License.
  */
 package pkg;
@@ -18,14 +18,14 @@ package pkg;
 public class TestAccessReplace {
   private static void fooS() {};
   private void foo() {};
-  private static void fooSParams(long a, long b) {};
+  private static void fooarams(long a, long b) {};
   private void fooParams(long a, long b) {};
 
   public class Inner {
     public Inner(String b) {
       fooS();
       foo();
-      fooSParams(1,2);
+      fooarams(1,2);
       fooParams(1,2);
     }
   }

@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.java.decompiler.code.CodeConstants;
 import org.jetbrains.java.decompiler.main.ClassWriter;
-import org.jetbrains.java.decompiler.main.ClassesProcessor.ClassNode;
+import org.jetbrains.java.decompiler.main.Classerocessor.ClassNode;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.collectors.BytecodeMappingTracer;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
@@ -21,7 +21,11 @@ import org.jetbrains.java.decompiler.util.InterpreterUtil;
 import org.jetbrains.java.decompiler.util.ListStack;
 import org.jetbrains.java.decompiler.util.TextBuffer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 public class NewExprent extends Exprent {
   private InvocationExprent constructor;
@@ -48,7 +52,7 @@ public class NewExprent extends Exprent {
     anonymous = false;
     lambda = false;
     if (newType.getType() == CodeConstants.TYPE_OBJECT && newType.getArrayDim() == 0) {
-      ClassNode node = DecompilerContext.getClassProcessor().getMapRootClasses().get(newType.getValue());
+      ClassNode node = DecompilerContext.getClasrocessor().getMapRootClasses().get(newType.getValue());
       if (node != null && (node.type == ClassNode.CLASS_ANONYMOUS || node.type == ClassNode.CLASS_LAMBDA)) {
         anonymous = true;
         if (node.type == ClassNode.CLASS_LAMBDA) {
@@ -75,7 +79,7 @@ public class NewExprent extends Exprent {
       return inferredType;
     }
     VarType currentType =
-      anonymous ? DecompilerContext.getClassProcessor().getMapRootClasses().get(newType.getValue()).anonymousClassType : newType;
+      anonymous ? DecompilerContext.getClasrocessor().getMapRootClasses().get(newType.getValue()).anonymousClassType : newType;
     if (currentType == null) {
       return VarType.VARTYPE_NULL;
     }
@@ -167,11 +171,11 @@ public class NewExprent extends Exprent {
     TextBuffer buf = new TextBuffer();
 
     if (anonymous) {
-      ClassNode child = DecompilerContext.getClassProcessor().getMapRootClasses().get(newType.getValue());
+      ClassNode child = DecompilerContext.getClasrocessor().getMapRootClasses().get(newType.getValue());
 
       boolean selfReference = DecompilerContext.getProperty(DecompilerContext.CURRENT_CLASS_NODE) == child;
 
-      // IDEA-204310 - avoid backtracking later on for lambdas (causes spurious imports)
+      // IDEA-204310 - avoid backtracking later on for lambdas (causes urious imports)
       if (!enumConst && (!lambda || DecompilerContext.getOption(IFernflowerPreferences.LAMBDA_TO_ANONYMOUS_CLASS))) {
         String enclosing = null;
 
@@ -189,7 +193,7 @@ public class NewExprent extends Exprent {
         } else {
           String typename = ExprProcessor.getCastTypeName(child.anonymousClassType, Collections.emptyList());
           if (enclosing != null) {
-            ClassNode anonymousNode = DecompilerContext.getClassProcessor().getMapRootClasses().get(child.anonymousClassType.getValue());
+            ClassNode anonymousNode = DecompilerContext.getClasrocessor().getMapRootClasses().get(child.anonymousClassType.getValue());
             if (anonymousNode != null) {
               typename = anonymousNode.simpleName;
             }
@@ -292,7 +296,7 @@ public class NewExprent extends Exprent {
 
         String typename = ExprProcessor.getTypeName(newType, Collections.emptyList());
         if (enclosing != null) {
-          ClassNode newNode = DecompilerContext.getClassProcessor().getMapRootClasses().get(newType.getValue());
+          ClassNode newNode = DecompilerContext.getClasrocessor().getMapRootClasses().get(newType.getValue());
           if (newNode != null) {
             typename = newNode.simpleName;
           }
@@ -394,12 +398,12 @@ public class NewExprent extends Exprent {
   }
 
   private static boolean probablySyntheticParameter(String className) {
-    ClassNode node = DecompilerContext.getClassProcessor().getMapRootClasses().get(className);
+    ClassNode node = DecompilerContext.getClasrocessor().getMapRootClasses().get(className);
     return node != null && node.type == ClassNode.CLASS_ANONYMOUS;
   }
 
   private static String getQualifiedNewInstance(String classname, List<Exprent> lstParams, int indent, BytecodeMappingTracer tracer) {
-    ClassNode node = DecompilerContext.getClassProcessor().getMapRootClasses().get(classname);
+    ClassNode node = DecompilerContext.getClasrocessor().getMapRootClasses().get(classname);
 
     if (node != null && node.type != ClassNode.CLASS_ROOT && node.type != ClassNode.CLASS_LOCAL
         && (node.access & CodeConstants.ACC_STATIC) == 0) {
@@ -527,7 +531,7 @@ public class NewExprent extends Exprent {
   }
 
   public String getLambdaMethodKey() {
-    ClassNode node = DecompilerContext.getClassProcessor().getMapRootClasses().get(newType.getValue());
+    ClassNode node = DecompilerContext.getClasrocessor().getMapRootClasses().get(newType.getValue());
     if (node != null && constructor != null) {
       String descriptor = ((PrimitiveConstant)constructor.getBootstrapArguments().get(0)).getString();
       return InterpreterUtil.makeUniqueKey(node.lambdaInformation.method_name, descriptor);

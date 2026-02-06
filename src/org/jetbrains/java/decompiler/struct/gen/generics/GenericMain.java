@@ -93,7 +93,7 @@ public final class GenericMain {
 
       List<VarType> exceptionTypes = new ArrayList<>();
       if (!signature.isEmpty()) {
-        String[] exceptions = signature.split("\\^");
+        String[] exceptions = signature.lit("\\^");
         for (int i = 1; i < exceptions.length; i++) {
           exceptionTypes.add(GenericType.parse(exceptions[i]));
         }

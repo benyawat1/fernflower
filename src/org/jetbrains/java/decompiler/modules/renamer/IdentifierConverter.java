@@ -13,7 +13,13 @@ import org.jetbrains.java.decompiler.struct.gen.NewClassNameBuilder;
 import org.jetbrains.java.decompiler.util.VBStyleCollection;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class IdentifierConverter implements NewClassNameBuilder {
   private final StructContext context;
@@ -182,23 +188,23 @@ public class IdentifierConverter implements NewClassNameBuilder {
       StructMethod mt = methods.get(i);
       String key = methods.getKey(i);
 
-      boolean isPrivate = mt.hasModifier(CodeConstants.ACC_PRIVATE);
+      boolean irivate = mt.hasModifier(CodeConstants.ACC_PRIVATE);
 
       String name = mt.getName();
       if (!cl.isOwn() || mt.hasModifier(CodeConstants.ACC_NATIVE)) {
         // external and native methods must not be renamed
-        if (!isPrivate) {
+        if (!irivate) {
           names.put(key, name);
         }
       }
       else if (helper.toBeRenamed(IMemberIdentifierRenamer.Type.ELEMENT_METHOD, classOldFullName, name, mt.getDescriptor())) {
-        if (isPrivate || !names.containsKey(key)) {
+        if (irivate || !names.containsKey(key)) {
           do {
             name = helper.getNextMethodName(classOldFullName, name, mt.getDescriptor());
           }
           while (setMethodNames.contains(name));
 
-          if (!isPrivate) {
+          if (!irivate) {
             names.put(key, name);
           }
         }

@@ -4,12 +4,12 @@ package org.jetbrains.java.decompiler.modules.decompiler.exps;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.java.decompiler.code.CodeConstants;
-import org.jetbrains.java.decompiler.main.ClassesProcessor.ClassNode;
+import org.jetbrains.java.decompiler.main.Classerocessor.ClassNode;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.collectors.BytecodeMappingTracer;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
 import org.jetbrains.java.decompiler.main.rels.MethodWrapper;
-import org.jetbrains.java.decompiler.modules.decompiler.ClasspathHelper;
+import org.jetbrains.java.decompiler.modules.decompiler.ClasathHelper;
 import org.jetbrains.java.decompiler.modules.decompiler.ExprProcessor;
 import org.jetbrains.java.decompiler.modules.decompiler.vars.CheckTypesResult;
 import org.jetbrains.java.decompiler.modules.decompiler.vars.VarProcessor;
@@ -31,11 +31,17 @@ import org.jetbrains.java.decompiler.util.TextBuffer;
 import org.jetbrains.java.decompiler.util.TextUtil;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 public class InvocationExprent extends Exprent {
-  private static final int INVOKE_SPECIAL = 1;
+  private static final int INVOKE_ECIAL = 1;
   private static final int INVOKE_VIRTUAL = 2;
   private static final int INVOKE_STATIC = 3;
   private static final int INVOKE_INTERFACE = 4;
@@ -77,7 +83,7 @@ public class InvocationExprent extends Exprent {
     this.bootstrapArguments = bootstrapArguments;
     switch (opcode) {
       case CodeConstants.opc_invokestatic -> invocationType = INVOKE_STATIC;
-      case CodeConstants.opc_invokespecial -> invocationType = INVOKE_SPECIAL;
+      case CodeConstants.opc_invokeecial -> invocationType = INVOKE_ECIAL;
       case CodeConstants.opc_invokevirtual -> invocationType = INVOKE_VIRTUAL;
       case CodeConstants.opc_invokeinterface -> invocationType = INVOKE_INTERFACE;
       case CodeConstants.opc_invokedynamic -> {
@@ -297,7 +303,7 @@ public class InvocationExprent extends Exprent {
         if (this_classname != null) {
           isInstanceThis = true;
 
-          if (invocationType == INVOKE_SPECIAL) {
+          if (invocationType == INVOKE_ECIAL) {
             if (!className.equals(this_classname)) { // TODO: direct comparison to the super class?
               StructClass cl = DecompilerContext.getStructContext().getClass(className);
               boolean isInterface = cl != null && cl.hasModifier(CodeConstants.ACC_INTERFACE);
@@ -384,14 +390,14 @@ public class InvocationExprent extends Exprent {
     List<VarVersion> mask = null;
     boolean isEnum = false;
     if (funcType == TYPE_INIT) {
-      ClassNode newNode = DecompilerContext.getClassProcessor().getMapRootClasses().get(className);
+      ClassNode newNode = DecompilerContext.getClasrocessor().getMapRootClasses().get(className);
       if (newNode != null) {
         mask = ExprUtil.getSyntheticParametersMask(newNode, stringDescriptor, parameters.size());
         isEnum = newNode.classStruct.hasModifier(CodeConstants.ACC_ENUM) && DecompilerContext.getOption(IFernflowerPreferences.DECOMPILE_ENUM);
       }
     }
     List<StructMethod> matches = getMatchedDescriptors();
-    BitSet setAmbiguousParameters = getAmbiguousParameters(matches);
+    BitSet setAmbiguouarameters = getAmbiguouarameters(matches);
 
     // omit 'new Type[] {}' for the last parameter of a vararg method call
     if (parameters.size() == descriptor.params.length && isVarArgCall()) {
@@ -406,7 +412,7 @@ public class InvocationExprent extends Exprent {
     for (int i = start; i < parameters.size(); i++) {
       if (mask == null || mask.get(i) == null) {
         TextBuffer buff = new TextBuffer();
-        boolean ambiguous = setAmbiguousParameters.get(i);
+        boolean ambiguous = setAmbiguouarameters.get(i);
 
         // 'byte' and 'short' literals need an explicit narrowing type cast when used as a parameter
         ExprProcessor.getCastedExprent(parameters.get(i), descriptor.params[i], buff, indent, true, ambiguous, true, true, tracer);
@@ -439,8 +445,8 @@ public class InvocationExprent extends Exprent {
     else {
       // TODO: tap into IDEA indices to access libraries methods details
 
-      // try to check the class on the classpath
-      Method mtd = ClasspathHelper.findMethod(className, name, descriptor);
+      // try to check the class on the clasath
+      Method mtd = ClasathHelper.findMethod(className, name, descriptor);
       return mtd != null && mtd.isVarArgs();
     }
     return false;
@@ -450,7 +456,7 @@ public class InvocationExprent extends Exprent {
     if (isStatic && "valueOf".equals(name) && parameters.size() == 1) {
       int paramType = parameters.get(0).getExprType().getType();
 
-      // special handling for ambiguous types
+      // ecial handling for ambiguous types
       if (parameters.get(0).type == EXPRENT_CONST) {
         // 'Integer.valueOf(1)' has '1' type detected as TYPE_BYTECHAR
         // 'Integer.valueOf(40_000)' has '40_000' type detected as TYPE_CHAR
@@ -540,7 +546,7 @@ public class InvocationExprent extends Exprent {
     return matches;
   }
 
-  private BitSet getAmbiguousParameters(List<StructMethod> matches) {
+  private BitSet getAmbiguouarameters(List<StructMethod> matches) {
     StructClass cl = DecompilerContext.getStructContext().getClass(className);
     if (cl == null || matches.size() == 1) {
       return EMPTY_BIT_SET;

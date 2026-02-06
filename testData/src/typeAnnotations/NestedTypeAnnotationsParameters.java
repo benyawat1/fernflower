@@ -1,6 +1,6 @@
 package pkg;
 
-public class NestedTypeAnnotationsParameters {
+public class NestedTypeAnnotationarameters {
     public static void doSomething(
             @A Z.Y.X.W w1,
             Z.@B Y.X.W w2,

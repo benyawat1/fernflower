@@ -1,9 +1,9 @@
 package pkg;
 
 public abstract class TestParameterizedTypes<P> {
-   abstract TestParameterizedTypes<P>.Inner<String> getUnspecificInner();
+   abstract TestParameterizedTypes<P>.Inner<String> getUnecificInner();
 
-   abstract TestParameterizedTypes<Number>.Inner<String> getSpecificInner();
+   abstract TestParameterizedTypes<Number>.Inner<String> getecificInner();
 
    public abstract class Inner<I> {
    }

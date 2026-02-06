@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
    d1 = {"\u0000\n\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\u001a\u0011\u0010\u0000\u001a\u00020\u0001H\u0086@ø\u0001\u0000¢\u0006\u0002\u0010\u0002\u001a\u0011\u0010\u0003\u001a\u00020\u0001H\u0086@ø\u0001\u0000¢\u0006\u0002\u0010\u0002\u0082\u0002\u0004\n\u0002\b\u0019"},
    d2 = {"bar", "", "(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", "foo2"}
 )
-public final class TestNamedSuspendFun2Kt {
+public final class TestNamedSuendFun2Kt {
    @Nullable
    public static final Object foo2(@NotNull Continuation<? super Integer> var0) {
       NamelessClass_1 var3;
@@ -33,10 +33,10 @@ public final class TestNamedSuspendFun2Kt {
          Object L$0;
 
          @Nullable
-         public final Object invokeSuspend(@NotNull Object result) {
+         public final Object invokeSuend(@NotNull Object result) {
             this.data = result;
             this.label |= -2147483648;
-            return TestNamedSuspendFun2Kt.foo2(this);
+            return TestNamedSuendFun2Kt.foo2(this);
          }
 
          NamelessClass_1(Continuation var1) {
@@ -62,7 +62,7 @@ public final class TestNamedSuspendFun2Kt {
       label486: {
          label452: {
             Object var2 = var3.data;
-            var4 = IntrinsicsKt.getCOROUTINE_SUSPENDED();// 2
+            var4 = IntrinsicsKt.getCOROUTINE_SUENDED();// 2
             switch (var3.label) {
                case 0:
                   if (var2 instanceof SuccessOrFailure.Failure) {
@@ -178,8 +178,8 @@ public final class TestNamedSuspendFun2Kt {
    }
 }
 
-class 'TestNamedSuspendFun2Kt$foo2$1' {
-   method 'invokeSuspend (Ljava/lang/Object;)Ljava/lang/Object;' {
+class 'TestNamedSuendFun2Kt$foo2$1' {
+   method 'invokeSuend (Ljava/lang/Object;)Ljava/lang/Object;' {
       0      36
       1      36
       2      36
@@ -207,7 +207,7 @@ class 'TestNamedSuspendFun2Kt$foo2$1' {
    }
 }
 
-class 'TestNamedSuspendFun2Kt' {
+class 'TestNamedSuendFun2Kt' {
    method 'foo2 (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;' {
       0      47
       1      47

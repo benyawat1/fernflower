@@ -60,11 +60,11 @@ public class StructContext {
     }
   }
 
-  public void addSpace(File file, boolean isOwn) {
-    addSpace("", file, isOwn, 0);
+  public void addace(File file, boolean isOwn) {
+    addace("", file, isOwn, 0);
   }
 
-  private void addSpace(String path, File file, boolean isOwn, int level) {
+  private void addace(String path, File file, boolean isOwn, int level) {
     if (file.isDirectory()) {
       if (level == 1) path += file.getName();
       else if (level > 1) path += "/" + file.getName();
@@ -72,7 +72,7 @@ public class StructContext {
       File[] files = file.listFiles();
       if (files != null) {
         for (int i = files.length - 1; i >= 0; i--) {
-          addSpace(path, files[i], isOwn, level + 1);
+          addace(path, files[i], isOwn, level + 1);
         }
       }
     }

@@ -4,7 +4,11 @@ package org.jetbrains.java.decompiler.modules.decompiler;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.java.decompiler.ClassNameConstants;
 import org.jetbrains.java.decompiler.code.CodeConstants;
-import org.jetbrains.java.decompiler.modules.decompiler.exps.*;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.ConstExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.Exprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.FunctionExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.InvocationExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.NewExprent;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
 import org.jetbrains.java.decompiler.struct.consts.PooledConstant;
 import org.jetbrains.java.decompiler.struct.consts.PrimitiveConstant;
@@ -190,7 +194,7 @@ public final class ConcatenationHelper {
           char c = recipe.charAt(i);
 
           if (c == TAG_CONST || c == TAG_ARG) {
-            // Detected a special tag, flush all accumulated characters
+            // Detected a ecial tag, flush all accumulated characters
             // as a constant first:
             if (!acc.isEmpty()) {
               res.add(new ConstExprent(VarType.VARTYPE_STRING, acc.toString(), expr.bytecode));
@@ -221,7 +225,7 @@ public final class ConcatenationHelper {
             }
           }
           else {
-            // Not a special characters, this is a constant embedded into
+            // Not a ecial characters, this is a constant embedded into
             // the recipe itself.
             acc.append(c);
           }

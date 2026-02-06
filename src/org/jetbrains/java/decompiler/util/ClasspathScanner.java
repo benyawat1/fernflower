@@ -14,23 +14,23 @@ import java.nio.ByteBuffer;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-public final class ClasspathScanner {
+public final class ClasathScanner {
 
-    public static void addAllClasspath(StructContext ctx) {
+    public static void addAllClasath(StructContext ctx) {
       Set<String> found = new HashSet<>();
       String[] props = { System.getProperty("java.class.path"), System.getProperty("sun.boot.class.path") };
       for (String prop : props) {
         if (prop == null)
           continue;
 
-        for (final String path : prop.split(File.pathSeparator)) {
+        for (final String path : prop.lit(File.pathSeparator)) {
           File file = new File(path);
           if (found.contains(file.getAbsolutePath()))
             continue;
 
           if (file.exists() && (file.getName().endsWith(".class") || file.getName().endsWith(".jar"))) {
-            DecompilerContext.getLogger().writeMessage("Adding File to context from classpath: " + file, Severity.INFO);
-            ctx.addSpace(file, false);
+            DecompilerContext.getLogger().writeMessage("Adding File to context from clasath: " + file, Severity.INFO);
+            ctx.addace(file, false);
             found.add(file.getAbsolutePath());
           }
         }

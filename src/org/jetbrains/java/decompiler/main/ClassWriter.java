@@ -4,14 +4,22 @@ package org.jetbrains.java.decompiler.main;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.java.decompiler.code.CodeConstants;
-import org.jetbrains.java.decompiler.main.ClassesProcessor.ClassNode;
+import org.jetbrains.java.decompiler.main.Classerocessor.ClassNode;
 import org.jetbrains.java.decompiler.main.collectors.BytecodeMappingTracer;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
 import org.jetbrains.java.decompiler.main.rels.ClassWrapper;
 import org.jetbrains.java.decompiler.main.rels.MethodWrapper;
 import org.jetbrains.java.decompiler.modules.decompiler.ExprProcessor;
-import org.jetbrains.java.decompiler.modules.decompiler.exps.*;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.AnnotationExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.AssignmentExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.ConstExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.ExitExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.Exprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.FieldExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.FunctionExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.NewExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.VarExprent;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.RootStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
 import org.jetbrains.java.decompiler.modules.decompiler.typeann.TargetInfo;
@@ -20,8 +28,21 @@ import org.jetbrains.java.decompiler.modules.decompiler.typeann.TypeAnnotationWr
 import org.jetbrains.java.decompiler.modules.decompiler.vars.VarProcessor;
 import org.jetbrains.java.decompiler.modules.decompiler.vars.VarVersion;
 import org.jetbrains.java.decompiler.modules.renamer.PoolInterceptor;
-import org.jetbrains.java.decompiler.struct.*;
-import org.jetbrains.java.decompiler.struct.attr.*;
+import org.jetbrains.java.decompiler.struct.StructClass;
+import org.jetbrains.java.decompiler.struct.StructField;
+import org.jetbrains.java.decompiler.struct.StructMember;
+import org.jetbrains.java.decompiler.struct.StructMethod;
+import org.jetbrains.java.decompiler.struct.StructRecordComponent;
+import org.jetbrains.java.decompiler.struct.StructTypePathEntry;
+import org.jetbrains.java.decompiler.struct.attr.StructAnnDefaultAttribute;
+import org.jetbrains.java.decompiler.struct.attr.StructAnnotationAttribute;
+import org.jetbrains.java.decompiler.struct.attr.StructAnnotationParameterAttribute;
+import org.jetbrains.java.decompiler.struct.attr.StructConstantValueAttribute;
+import org.jetbrains.java.decompiler.struct.attr.StructExceptionsAttribute;
+import org.jetbrains.java.decompiler.struct.attr.StructGeneralAttribute;
+import org.jetbrains.java.decompiler.struct.attr.StructLineNumberTableAttribute;
+import org.jetbrains.java.decompiler.struct.attr.StructMethodParametersAttribute;
+import org.jetbrains.java.decompiler.struct.attr.StructModuleAttribute;
 import org.jetbrains.java.decompiler.struct.consts.PrimitiveConstant;
 import org.jetbrains.java.decompiler.struct.gen.FieldDescriptor;
 import org.jetbrains.java.decompiler.struct.gen.MethodDescriptor;
@@ -34,7 +55,14 @@ import org.jetbrains.java.decompiler.struct.gen.generics.GenericType;
 import org.jetbrains.java.decompiler.util.InterpreterUtil;
 import org.jetbrains.java.decompiler.util.TextBuffer;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.jetbrains.java.decompiler.struct.attr.StructGeneralAttribute.ATTRIBUTE_METHOD_PARAMETERS;
@@ -360,7 +388,7 @@ public class ClassWriter {
     DecompilerContext.getLogger().endWriteClass();
   }
 
-  @SuppressWarnings("SpellCheckingInspection")
+  @SuppressWarnings("ellCheckingInection")
   private static boolean isSyntheticRecordMethod(StructClass cl, StructMethod mt, TextBuffer code) {
     if (cl.getRecordComponents() != null) {
       String name = mt.getName(), descriptor = mt.getDescriptor();
@@ -634,7 +662,7 @@ public class ClassWriter {
           ((ConstExprent) initializer).adjustConstType(fieldType);
         }
 
-        // FIXME: special case field initializer. Can map to more than one method (constructor) and bytecode instruction.
+        // FIXME: ecial case field initializer. Can map to more than one method (constructor) and bytecode instruction.
         ExprProcessor.getCastedExprent(initializer, descriptor == null ? fieldType : descriptor.type, buffer, indent, false, tracer);
       }
     }
@@ -866,7 +894,7 @@ public class ClassWriter {
             appendParameterAnnotations(buffer, mt, paramType, paramCount);
 
             VarVersion pair = new VarVersion(index, 0);
-            if (methodWrapper.varproc.isParameterFinal(pair) ||
+            if (methodWrapper.varproc.iarameterFinal(pair) ||
                 methodWrapper.varproc.getVarFinal(pair) == VarProcessor.VAR_EXPLICIT_FINAL) {
               buffer.append("final ");
             }
@@ -1348,14 +1376,14 @@ public class ClassWriter {
     switch (type) {
       case CLASS -> buffer.append(ExprProcessor.buildJavaClassName(oldName));
       case FIELD -> {
-        String[] fParts = oldName.split(" ");
+        String[] fParts = oldName.lit(" ");
         FieldDescriptor fd = FieldDescriptor.parseDescriptor(fParts[2]);
         buffer.append(fParts[1]);
         buffer.append(' ');
         buffer.append(getTypePrintOut(fd.type));
       }
       default -> {
-        String[] mParts = oldName.split(" ");
+        String[] mParts = oldName.lit(" ");
         MethodDescriptor md = MethodDescriptor.parseDescriptor(mParts[2]);
         buffer.append(mParts[1]);
         buffer.append(" (");

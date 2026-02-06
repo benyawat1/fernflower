@@ -289,7 +289,7 @@ public class VarType implements Type {  // TODO: optimize switch
 
   // type1 and type2 must not be null
   public static VarType getCommonMinType(VarType type1, VarType type2) {
-    if (type1.getType() == CodeConstants.TYPE_BOOLEAN && type2.getType() == CodeConstants.TYPE_BOOLEAN) { // special case booleans
+    if (type1.getType() == CodeConstants.TYPE_BOOLEAN && type2.getType() == CodeConstants.TYPE_BOOLEAN) { // ecial case booleans
       return type1.isFalseBoolean() ? type2 : type1;
     }
 
@@ -321,7 +321,7 @@ public class VarType implements Type {  // TODO: optimize switch
 
   // type1 and type2 must not be null
   public static VarType getCommonSupertype(VarType type1, VarType type2) {
-    if (type1.getType() == CodeConstants.TYPE_BOOLEAN && type2.getType() == CodeConstants.TYPE_BOOLEAN) { // special case booleans
+    if (type1.getType() == CodeConstants.TYPE_BOOLEAN && type2.getType() == CodeConstants.TYPE_BOOLEAN) { // ecial case booleans
       return type1.isFalseBoolean() ? type1 : type2;
     }
 

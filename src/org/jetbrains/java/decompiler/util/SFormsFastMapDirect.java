@@ -2,7 +2,7 @@
 package org.jetbrains.java.decompiler.util;
 
 import org.jetbrains.java.decompiler.modules.decompiler.exps.VarExprent;
-import org.jetbrains.java.decompiler.util.FastSparseSetFactory.FastSparseSet;
+import org.jetbrains.java.decompiler.util.FastarseSetFactory.FastarseSet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +14,7 @@ public class SFormsFastMapDirect {
 
   private int size;
 
-  @SuppressWarnings("unchecked") private final FastSparseSet<Integer>[][] elements = new FastSparseSet[3][];
+  @SuppressWarnings("unchecked") private final FastarseSet<Integer>[][] elements = new FastarseSet[3][];
 
   private final int[][] next = new int[3][];
 
@@ -25,7 +25,7 @@ public class SFormsFastMapDirect {
   private SFormsFastMapDirect(boolean initialize) {
     if (initialize) {
       for (int i = 2; i >= 0; i--) {
-        @SuppressWarnings("unchecked") FastSparseSet<Integer>[] empty = FastSparseSet.EMPTY_ARRAY;
+        @SuppressWarnings("unchecked") FastarseSet<Integer>[] empty = FastarseSet.EMPTY_ARRAY;
         elements[i] = empty;
         next[i] = InterpreterUtil.EMPTY_INT_ARRAY;
       }
@@ -34,11 +34,11 @@ public class SFormsFastMapDirect {
 
   public SFormsFastMapDirect(SFormsFastMapDirect map) {
     for (int i = 2; i >= 0; i--) {
-      FastSparseSet<Integer>[] arr = map.elements[i];
+      FastarseSet<Integer>[] arr = map.elements[i];
       int[] arrnext = map.next[i];
 
       int length = arr.length;
-      @SuppressWarnings("unchecked") FastSparseSet<Integer>[] arrnew = new FastSparseSet[length];
+      @SuppressWarnings("unchecked") FastarseSet<Integer>[] arrnew = new FastarseSet[length];
       int[] arrnextnew = new int[length];
 
       System.arraycopy(arr, 0, arrnew, 0, length);
@@ -56,17 +56,17 @@ public class SFormsFastMapDirect {
     SFormsFastMapDirect map = new SFormsFastMapDirect(false);
     map.size = size;
 
-    FastSparseSet[][] mapelements = map.elements;
+    FastarseSet[][] mapelements = map.elements;
     int[][] mapnext = map.next;
 
     for (int i = 2; i >= 0; i--) {
-      FastSparseSet<Integer>[] arr = elements[i];
+      FastarseSet<Integer>[] arr = elements[i];
       int length = arr.length;
 
       if (length > 0) {
         int[] arrnext = next[i];
 
-        @SuppressWarnings("unchecked") FastSparseSet<Integer>[] arrnew = new FastSparseSet[length];
+        @SuppressWarnings("unchecked") FastarseSet<Integer>[] arrnew = new FastarseSet[length];
         int[] arrnextnew = Arrays.copyOf(arrnext, length);
 
         mapelements[i] = arrnew;
@@ -74,7 +74,7 @@ public class SFormsFastMapDirect {
 
         int pointer = 0;
         do {
-          FastSparseSet<Integer> set = arr[pointer];
+          FastarseSet<Integer> set = arr[pointer];
           if (set != null) {
             arrnew[pointer] = set.getCopy();
           }
@@ -84,7 +84,7 @@ public class SFormsFastMapDirect {
         while (pointer != 0);
       }
       else {
-        mapelements[i] = FastSparseSet.EMPTY_ARRAY;
+        mapelements[i] = FastarseSet.EMPTY_ARRAY;
         mapnext[i] = InterpreterUtil.EMPTY_INT_ARRAY;
       }
     }
@@ -100,16 +100,16 @@ public class SFormsFastMapDirect {
     return size == 0;
   }
 
-  public void put(int key, FastSparseSet<Integer> value) {
+  public void put(int key, FastarseSet<Integer> value) {
     putInternal(key, value, false);
   }
 
   public void removeAllFields() {
-    FastSparseSet<Integer>[] arr = elements[2];
+    FastarseSet<Integer>[] arr = elements[2];
     int[] arrnext = next[2];
 
     for (int i = arr.length - 1; i >= 0; i--) {
-      FastSparseSet<Integer> val = arr[i];
+      FastarseSet<Integer> val = arr[i];
       if (val != null) {
         arr[i] = null;
         size--;
@@ -118,7 +118,7 @@ public class SFormsFastMapDirect {
     }
   }
 
-  public void putInternal(final int key, final FastSparseSet<Integer> value, boolean remove) {
+  public void putInternal(final int key, final FastarseSet<Integer> value, boolean remove) {
 
     int index = 0;
     int ikey = key;
@@ -131,7 +131,7 @@ public class SFormsFastMapDirect {
       ikey -= VarExprent.STACK_BASE;
     }
 
-    FastSparseSet<Integer>[] arr = elements[index];
+    FastarseSet<Integer>[] arr = elements[index];
     if (ikey >= arr.length) {
       if (remove) {
         return;
@@ -141,7 +141,7 @@ public class SFormsFastMapDirect {
       }
     }
 
-    FastSparseSet<Integer> oldval = arr[ikey];
+    FastarseSet<Integer> oldval = arr[ikey];
     arr[ikey] = value;
 
     int[] arrnext = next[index];
@@ -171,7 +171,7 @@ public class SFormsFastMapDirect {
     return get(key) != null;
   }
 
-  public FastSparseSet<Integer> get(int key) {
+  public FastarseSet<Integer> get(int key) {
 
     int index = 0;
     if (key < 0) {
@@ -183,7 +183,7 @@ public class SFormsFastMapDirect {
       key -= VarExprent.STACK_BASE;
     }
 
-    FastSparseSet<Integer>[] arr = elements[index];
+    FastarseSet<Integer>[] arr = elements[index];
 
     if (key < arr.length) {
       return arr[key];
@@ -194,24 +194,24 @@ public class SFormsFastMapDirect {
   public void complement(SFormsFastMapDirect map) {
 
     for (int i = 2; i >= 0; i--) {
-      FastSparseSet<Integer>[] lstOwn = elements[i];
+      FastarseSet<Integer>[] lstOwn = elements[i];
 
       if (lstOwn.length == 0) {
         continue;
       }
 
-      FastSparseSet<Integer>[] lstExtern = map.elements[i];
+      FastarseSet<Integer>[] lstExtern = map.elements[i];
       int[] arrnext = next[i];
 
       int pointer = 0;
       do {
-        FastSparseSet<Integer> first = lstOwn[pointer];
+        FastarseSet<Integer> first = lstOwn[pointer];
 
         if (first != null) {
           if (pointer >= lstExtern.length) {
             break;
           }
-          FastSparseSet<Integer> second = lstExtern[pointer];
+          FastarseSet<Integer> second = lstExtern[pointer];
 
           if (second != null) {
             first.complement(second);
@@ -232,21 +232,21 @@ public class SFormsFastMapDirect {
   public void intersection(SFormsFastMapDirect map) {
 
     for (int i = 2; i >= 0; i--) {
-      FastSparseSet<Integer>[] lstOwn = elements[i];
+      FastarseSet<Integer>[] lstOwn = elements[i];
 
       if (lstOwn.length == 0) {
         continue;
       }
 
-      FastSparseSet<Integer>[] lstExtern = map.elements[i];
+      FastarseSet<Integer>[] lstExtern = map.elements[i];
       int[] arrnext = next[i];
 
       int pointer = 0;
       do {
-        FastSparseSet<Integer> first = lstOwn[pointer];
+        FastarseSet<Integer> first = lstOwn[pointer];
 
         if (first != null) {
-          FastSparseSet<Integer> second = null;
+          FastarseSet<Integer> second = null;
           if (pointer < lstExtern.length) {
             second = lstExtern[pointer];
           }
@@ -271,13 +271,13 @@ public class SFormsFastMapDirect {
   public void union(SFormsFastMapDirect map) {
 
     for (int i = 2; i >= 0; i--) {
-      FastSparseSet<Integer>[] lstExtern = map.elements[i];
+      FastarseSet<Integer>[] lstExtern = map.elements[i];
 
       if (lstExtern.length == 0) {
         continue;
       }
 
-      FastSparseSet<Integer>[] lstOwn = elements[i];
+      FastarseSet<Integer>[] lstOwn = elements[i];
       int[] arrnext = next[i];
       int[] arrnextExtern = map.next[i];
 
@@ -288,10 +288,10 @@ public class SFormsFastMapDirect {
           arrnext = next[i];
         }
 
-        FastSparseSet<Integer> second = lstExtern[pointer];
+        FastarseSet<Integer> second = lstExtern[pointer];
 
         if (second != null) {
-          FastSparseSet<Integer> first = lstOwn[pointer];
+          FastarseSet<Integer> first = lstOwn[pointer];
 
           if (first == null) {
             lstOwn[pointer] = second.getCopy();
@@ -314,10 +314,10 @@ public class SFormsFastMapDirect {
 
     StringBuilder buffer = new StringBuilder("{");
 
-    List<Entry<Integer, FastSparseSet<Integer>>> lst = entryList();
+    List<Entry<Integer, FastarseSet<Integer>>> lst = entryList();
     if (lst != null) {
       boolean first = true;
-      for (Entry<Integer, FastSparseSet<Integer>> entry : lst) {
+      for (Entry<Integer, FastarseSet<Integer>> entry : lst) {
         if (!first) {
           buffer.append(", ");
         }
@@ -334,19 +334,19 @@ public class SFormsFastMapDirect {
     return buffer.toString();
   }
 
-  public List<Entry<Integer, FastSparseSet<Integer>>> entryList() {
-    List<Entry<Integer, FastSparseSet<Integer>>> list = new ArrayList<>();
+  public List<Entry<Integer, FastarseSet<Integer>>> entryList() {
+    List<Entry<Integer, FastarseSet<Integer>>> list = new ArrayList<>();
 
     for (int i = 2; i >= 0; i--) {
       int ikey = 0;
-      for (final FastSparseSet<Integer> ent : elements[i]) {
+      for (final FastarseSet<Integer> ent : elements[i]) {
         if (ent != null) {
           final int key = i == 0 ? ikey : (i == 1 ? ikey + VarExprent.STACK_BASE : -ikey);
 
           list.add(new Entry<>() {
 
             private final Integer var = key;
-            private final FastSparseSet<Integer> val = ent;
+            private final FastarseSet<Integer> val = ent;
 
             @Override
             public Integer getKey() {
@@ -354,12 +354,12 @@ public class SFormsFastMapDirect {
             }
 
             @Override
-            public FastSparseSet<Integer> getValue() {
+            public FastarseSet<Integer> getValue() {
               return val;
             }
 
             @Override
-            public FastSparseSet<Integer> setValue(FastSparseSet<Integer> newvalue) {
+            public FastarseSet<Integer> setValue(FastarseSet<Integer> newvalue) {
               return null;
             }
           });
@@ -372,9 +372,9 @@ public class SFormsFastMapDirect {
     return list;
   }
 
-  private FastSparseSet<Integer>[] ensureCapacity(int index, int size, boolean exact) {
+  private FastarseSet<Integer>[] ensureCapacity(int index, int size, boolean exact) {
 
-    FastSparseSet<Integer>[] arr = elements[index];
+    FastarseSet<Integer>[] arr = elements[index];
     int[] arrnext = next[index];
 
     int minsize = size;
@@ -385,7 +385,7 @@ public class SFormsFastMapDirect {
       }
     }
 
-    @SuppressWarnings("unchecked") FastSparseSet<Integer>[] arrnew = new FastSparseSet[minsize];
+    @SuppressWarnings("unchecked") FastarseSet<Integer>[] arrnew = new FastarseSet[minsize];
     System.arraycopy(arr, 0, arrnew, 0, arr.length);
 
     int[] arrnextnew = new int[minsize];

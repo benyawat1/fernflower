@@ -1,5 +1,5 @@
 /**
- * This code can be assembled with <a href="https://wiki.openjdk.org/display/CodeTools/asmtools">asmtools</a>
+ * This code can be assembled with <a href="https://wiki.openjdk.org/dilay/CodeTools/asmtools">asmtools</a>
  * using <code>asmtools jasm -g *.jasm</code> command line.
  */
 package  pkg;
@@ -12,7 +12,7 @@ private Method "<init>":"(Ljava/lang/Object;)V"
 	stack 1 locals 2
 {
 		aload_0;
-		invokespecial	Method java/lang/Object."<init>":"()V";
+		invokeecial	Method java/lang/Object."<init>":"()V";
 		return;
 }
 
@@ -25,7 +25,7 @@ private Method "<init>":"()V"
 
         aload_0;
 		aconst_null;
-		invokespecial	Method "<init>":"(Ljava/lang/Object;)V";
+		invokeecial	Method "<init>":"(Ljava/lang/Object;)V";
 		return;
 }
 
@@ -35,7 +35,7 @@ public static varargs Method main:"([Ljava/lang/String;)V"
 		try t0;
 		new	class TestMissingConstructorCallGood;
 		dup;
-		invokespecial	Method "<init>":"()V";
+		invokeecial	Method "<init>":"()V";
 		pop;
 		endtry t0;
 		goto	L12;

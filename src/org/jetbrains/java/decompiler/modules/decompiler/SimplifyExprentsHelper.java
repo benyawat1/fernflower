@@ -2,13 +2,28 @@
 package org.jetbrains.java.decompiler.modules.decompiler;
 
 import org.jetbrains.java.decompiler.code.CodeConstants;
-import org.jetbrains.java.decompiler.main.ClassesProcessor.ClassNode;
+import org.jetbrains.java.decompiler.main.Classerocessor.ClassNode;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
 import org.jetbrains.java.decompiler.main.rels.ClassWrapper;
 import org.jetbrains.java.decompiler.modules.decompiler.StatEdge.EdgeType;
+<<<<<<< HEAD
 import org.jetbrains.java.decompiler.modules.decompiler.exps.*;
+import org.jetbrains.java.decompiler.modules.decompiler.sforms.SSAConstructorarseEx;
+=======
+import org.jetbrains.java.decompiler.modules.decompiler.exps.ArrayExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.AssignmentExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.ConstExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.ExitExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.Exprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.FieldExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.FunctionExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.InvocationExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.MonitorExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.NewExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.VarExprent;
 import org.jetbrains.java.decompiler.modules.decompiler.sforms.SSAConstructorSparseEx;
+>>>>>>> 36bc04c2bb42614fab80c88ac0146c2df44d7ae2
 import org.jetbrains.java.decompiler.modules.decompiler.stats.IfStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement.StatementType;
@@ -16,14 +31,20 @@ import org.jetbrains.java.decompiler.modules.decompiler.vars.VarVersion;
 import org.jetbrains.java.decompiler.struct.StructClass;
 import org.jetbrains.java.decompiler.struct.gen.VarType;
 import org.jetbrains.java.decompiler.struct.match.MatchEngine;
-import org.jetbrains.java.decompiler.util.FastSparseSetFactory.FastSparseSet;
+import org.jetbrains.java.decompiler.util.FastarseSetFactory.FastarseSet;
 import org.jetbrains.java.decompiler.util.InterpreterUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 public class SimplifyExprentsHelper {
-  @SuppressWarnings("SpellCheckingInspection") private static final MatchEngine class14Builder = new MatchEngine(
+  @SuppressWarnings("ellCheckingInection") private static final MatchEngine class14Builder = new MatchEngine(
     """
       statement type:if iftype:if exprsize:-1
        exprent position:head type:if
@@ -54,7 +75,7 @@ public class SimplifyExprentsHelper {
     this.firstInvocation = firstInvocation;
   }
 
-  public boolean simplifyStackVarsStatement(Statement stat, Set<Integer> setReorderedIfs, SSAConstructorSparseEx ssa, StructClass cl) {
+  public boolean simplifyStackVarsStatement(Statement stat, Set<Integer> setReorderedIfs, SSAConstructorarseEx ssa, StructClass cl) {
     boolean res = false;
 
     List<Exprent> expressions = stat.getExprents();
@@ -166,7 +187,7 @@ public class SimplifyExprentsHelper {
       }
 
       // integer ++expr and --expr  (except for vars!)
-      Exprent func = isPPIorMMI(current);
+      Exprent func = iPIorMMI(current);
       if (func != null) {
         list.set(index, func);
         res = true;
@@ -397,7 +418,7 @@ public class SimplifyExprentsHelper {
     return false;
   }
 
-  private static Exprent isPPIorMMI(Exprent first) {
+  private static Exprent iPIorMMI(Exprent first) {
     if (first.type == Exprent.EXPRENT_ASSIGNMENT) {
       AssignmentExprent as = (AssignmentExprent)first;
 
@@ -525,7 +546,7 @@ public class SimplifyExprentsHelper {
                 newExpr.getConstructor().getParameters().get(0).equals(invocation.getInstance())) {
 
               String classname = newExpr.getNewType().getValue();
-              ClassNode node = DecompilerContext.getClassProcessor().getMapRootClasses().get(classname);
+              ClassNode node = DecompilerContext.getClasrocessor().getMapRootClasses().get(classname);
               if (node != null && node.type != ClassNode.CLASS_ROOT) {
                 return true;
               }
@@ -598,14 +619,14 @@ public class SimplifyExprentsHelper {
 
       if (in.getInvocationType() == InvocationExprent.INVOKE_DYNAMIC) {
         String lambda_class_name = cl.qualifiedName + in.getInvokeDynamicClassSuffix();
-        ClassNode lambda_class = DecompilerContext.getClassProcessor().getMapRootClasses().get(lambda_class_name);
+        ClassNode lambda_class = DecompilerContext.getClasrocessor().getMapRootClasses().get(lambda_class_name);
 
         if (lambda_class != null) { // real lambda class found, replace invocation with an anonymous class
           NewExprent newExpr = new NewExprent(new VarType(lambda_class_name, true), null, 0, in.bytecode);
           newExpr.setConstructor(in);
           // note: we don't set the instance to null with in.setInstance(null) like it is done for a common constructor invocation
           // lambda can also be a reference to a virtual method (e.g. String x; ...(x::toString);)
-          // in this case instance will hold the corresponding object
+          // in this case instance will hold the correonding object
 
           return newExpr;
         }
@@ -637,7 +658,7 @@ public class SimplifyExprentsHelper {
     return null;
   }
 
-  private static boolean buildIff(Statement stat, SSAConstructorSparseEx ssa) {
+  private static boolean buildIff(Statement stat, SSAConstructorarseEx ssa) {
     if (stat.type == StatementType.IF && stat.getExprents() == null) {
       IfStatement statement = (IfStatement)stat;
       Exprent ifHeadExpr = statement.getHeadexprent();
@@ -665,7 +686,7 @@ public class SimplifyExprentsHelper {
               if (ifVar.getIndex() == elseVar.getIndex() && ifVar.isStack()) { // ifVar.getIndex() >= VarExprent.STACK_BASE) {
                 boolean found = false;
 
-                for (Entry<VarVersion, FastSparseSet<Integer>> ent : ssa.getPhi().entrySet()) {
+                for (Entry<VarVersion, FastarseSet<Integer>> ent : ssa.getPhi().entrySet()) {
                   if (ent.getKey().var == ifVar.getIndex()) {
                     if (ent.getValue().contains(ifVar.getVersion()) && ent.getValue().contains(elseVar.getVersion())) {
                       found = true;

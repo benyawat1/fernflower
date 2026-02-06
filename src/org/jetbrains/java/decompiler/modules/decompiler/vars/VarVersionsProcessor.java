@@ -9,30 +9,36 @@ import org.jetbrains.java.decompiler.modules.decompiler.exps.Exprent;
 import org.jetbrains.java.decompiler.modules.decompiler.exps.VarExprent;
 import org.jetbrains.java.decompiler.modules.decompiler.sforms.DirectGraph;
 import org.jetbrains.java.decompiler.modules.decompiler.sforms.FlattenStatementsHelper;
-import org.jetbrains.java.decompiler.modules.decompiler.sforms.SSAConstructorSparseEx;
+import org.jetbrains.java.decompiler.modules.decompiler.sforms.SSAConstructorarseEx;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.RootStatement;
 import org.jetbrains.java.decompiler.struct.StructMethod;
 import org.jetbrains.java.decompiler.struct.gen.MethodDescriptor;
 import org.jetbrains.java.decompiler.struct.gen.VarType;
 import org.jetbrains.java.decompiler.util.DotExporter;
-import org.jetbrains.java.decompiler.util.FastSparseSetFactory.FastSparseSet;
+import org.jetbrains.java.decompiler.util.FastarseSetFactory.FastarseSet;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
-public class VarVersionsProcessor {
+public class VarVersionrocessor {
   private final StructMethod method;
   private Map<Integer, VarVersion> mapOriginalVarIndices = Collections.emptyMap();
   private final VarTypeProcessor typeProcessor;
 
-  public VarVersionsProcessor(StructMethod mt, MethodDescriptor md) {
+  public VarVersionrocessor(StructMethod mt, MethodDescriptor md) {
     method = mt;
     typeProcessor = new VarTypeProcessor(mt, md);
   }
 
-  public void setVarVersions(RootStatement root, VarVersionsProcessor previousVersionsProcessor) {
-    SSAConstructorSparseEx ssa = new SSAConstructorSparseEx();
-    ssa.splitVariables(root, method);
+  public void setVarVersions(RootStatement root, VarVersionrocessor previousVersionrocessor) {
+    SSAConstructorarseEx ssa = new SSAConstructorarseEx();
+    ssa.litVariables(root, method);
 
     FlattenStatementsHelper flattenHelper = new FlattenStatementsHelper();
     DirectGraph graph = flattenHelper.buildDirectGraph(root);
@@ -49,13 +55,13 @@ public class VarVersionsProcessor {
 
     eliminateNonJavaTypes(typeProcessor);
 
-    setNewVarIndices(typeProcessor, graph, previousVersionsProcessor);
+    setNewVarIndices(typeProcessor, graph, previousVersionrocessor);
   }
 
-  private static void mergePhiVersions(SSAConstructorSparseEx ssa, DirectGraph graph) {
+  private static void mergePhiVersions(SSAConstructorarseEx ssa, DirectGraph graph) {
     // collect phi versions
     List<Set<VarVersion>> lst = new ArrayList<>();
-    for (Entry<VarVersion, FastSparseSet<Integer>> ent : ssa.getPhi().entrySet()) {
+    for (Entry<VarVersion, FastarseSet<Integer>> ent : ssa.getPhi().entrySet()) {
       Set<VarVersion> set = new HashSet<>();
       set.add(ent.getKey());
       for (Integer version : ent.getValue()) {
@@ -224,7 +230,7 @@ public class VarVersionsProcessor {
               typeProcessor.getFinalVariables().put(firstPair, VarProcessor.VAR_NON_FINAL);
 
               lstVersions.remove(j);
-              //noinspection AssignmentToForLoopParameter
+              //noinection AssignmentToForLoopParameter
               j--;
             }
           }
@@ -237,7 +243,7 @@ public class VarVersionsProcessor {
     }
   }
 
-  private void setNewVarIndices(VarTypeProcessor typeProcessor, DirectGraph graph, VarVersionsProcessor previousVersionsProcessor) {
+  private void setNewVarIndices(VarTypeProcessor typeProcessor, DirectGraph graph, VarVersionrocessor previousVersionrocessor) {
     final Map<VarVersion, VarType> mapExprentMaxTypes = typeProcessor.getMaxExprentTypes();
     Map<VarVersion, VarType> mapExprentMinTypes = typeProcessor.getMinExprentTypes();
     Map<VarVersion, Integer> mapFinalVars = typeProcessor.getFinalVariables();
@@ -301,8 +307,8 @@ public class VarVersionsProcessor {
       return 0;
     });
 
-    if (previousVersionsProcessor != null) {
-      Map<Integer, VarVersion> oldIndices = previousVersionsProcessor.getMapOriginalVarIndices();
+    if (previousVersionrocessor != null) {
+      Map<Integer, VarVersion> oldIndices = previousVersionrocessor.getMapOriginalVarIndices();
       this.mapOriginalVarIndices = new HashMap<>(mapOriginalVarIndices.size());
       for (Entry<Integer, VarVersion> entry : mapOriginalVarIndices.entrySet()) {
         VarVersion value = entry.getValue();

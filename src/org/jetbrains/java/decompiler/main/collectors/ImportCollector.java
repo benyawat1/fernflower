@@ -1,7 +1,7 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package org.jetbrains.java.decompiler.main.collectors;
 
-import org.jetbrains.java.decompiler.main.ClassesProcessor.ClassNode;
+import org.jetbrains.java.decompiler.main.Classerocessor.ClassNode;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.struct.StructClass;
 import org.jetbrains.java.decompiler.struct.StructContext;
@@ -10,7 +10,13 @@ import org.jetbrains.java.decompiler.struct.attr.StructGeneralAttribute;
 import org.jetbrains.java.decompiler.struct.attr.StructInnerClassesAttribute;
 import org.jetbrains.java.decompiler.util.TextBuffer;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ImportCollector {
@@ -100,14 +106,14 @@ public class ImportCollector {
   }
 
   public String getNestedName(String fullName, boolean imported) {
-    ClassNode node = DecompilerContext.getClassProcessor().getMapRootClasses().get(fullName.replace('.', '/')); //todo[r.sh] anonymous classes?
+    ClassNode node = DecompilerContext.getClasrocessor().getMapRootClasses().get(fullName.replace('.', '/')); //todo[r.sh] anonymous classes?
 
     String nestedName;
     if (node != null && node.classStruct.isOwn()) {
       nestedName = node.simpleName;
 
       while (node.parent != null && node.type == ClassNode.CLASS_MEMBER) {
-        //noinspection StringConcatenationInLoop
+        //noinection StringConcatenationInLoop
         nestedName = node.parent.simpleName + '.' + nestedName;
         node = node.parent;
       }

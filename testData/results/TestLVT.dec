@@ -14,16 +14,16 @@ public class TestLVT {
          String scope2 = "scope2";
          String scope2a = "scope2a";
          List<Object> noise = new ArrayList();
-         String spam = scope1 + scope2 + scope2a + i + String.valueOf(noise);
-         System.out.println(spam);
+         String am = scope1 + scope2 + scope2a + i + String.valueOf(noise);
+         System.out.println(am);
       }
 
       for(long i = 0L; i < 10L; ++i) {
          String scope2 = "scope2+1";
          String scope2a = "scope2+1a";
          Map<Object, Object> noise = new HashMap();
-         String spam = scope1a + scope2 + scope2a + i + String.valueOf(noise);
-         System.out.println(spam);
+         String am = scope1a + scope2 + scope2a + i + String.valueOf(noise);
+         System.out.println(am);
       }
 
    }

@@ -30,7 +30,7 @@ public class StructTypePathEntry {
   /**
    * The type_path_kind.
    *
-   * @see <a href="https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-4.html">The JVM class File Format Spec</a> Table 4.7.20.2 A
+   * @see <a href="https://docs.oracle.com/javase/ecs/jvms/se17/html/jvms-4.html">The JVM class File Format ec</a> Table 4.7.20.2 A
    */
   public enum Kind {
     /**

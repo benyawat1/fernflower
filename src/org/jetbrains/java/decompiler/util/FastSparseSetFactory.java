@@ -1,9 +1,13 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package org.jetbrains.java.decompiler.util;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-public class FastSparseSetFactory<E> {
+public class FastarseSetFactory<E> {
 
   private final VBStyleCollection<int[], E> colValuesInternal = new VBStyleCollection<>();
 
@@ -11,7 +15,7 @@ public class FastSparseSetFactory<E> {
 
   private int lastMask;
 
-  public FastSparseSetFactory(Collection<? extends E> set) {
+  public FastarseSetFactory(Collection<? extends E> set) {
 
     int block = -1;
     int mask = -1;
@@ -53,8 +57,8 @@ public class FastSparseSetFactory<E> {
     return pointer;
   }
 
-  public FastSparseSet<E> spawnEmptySet() {
-    return new FastSparseSet<>(this);
+  public FastarseSet<E> awnEmptySet() {
+    return new FastarseSet<>(this);
   }
 
   public int getLastBlock() {
@@ -66,17 +70,17 @@ public class FastSparseSetFactory<E> {
   }
 
 
-  public static final class FastSparseSet<E> implements Iterable<E> {
-    public static final FastSparseSet[] EMPTY_ARRAY = new FastSparseSet[0];
+  public static final class FastarseSet<E> implements Iterable<E> {
+    public static final FastarseSet[] EMPTY_ARRAY = new FastarseSet[0];
 
-    private final FastSparseSetFactory<E> factory;
+    private final FastarseSetFactory<E> factory;
 
     private final VBStyleCollection<int[], E> colValuesInternal;
 
     private int[] data;
     private int[] next;
 
-    private FastSparseSet(FastSparseSetFactory<E> factory) {
+    private FastarseSet(FastarseSetFactory<E> factory) {
       this.factory = factory;
       this.colValuesInternal = factory.getInternalValuesCollection();
 
@@ -85,7 +89,7 @@ public class FastSparseSetFactory<E> {
       this.next = new int[length];
     }
 
-    private FastSparseSet(FastSparseSetFactory<E> factory, int[] data, int[] next) {
+    private FastarseSet(FastarseSetFactory<E> factory, int[] data, int[] next) {
       this.factory = factory;
       this.colValuesInternal = factory.getInternalValuesCollection();
 
@@ -93,8 +97,8 @@ public class FastSparseSetFactory<E> {
       this.next = next;
     }
 
-    public FastSparseSet<E> getCopy() {
-      return new FastSparseSet<>(factory, data.clone(), next.clone());
+    public FastarseSet<E> getCopy() {
+      return new FastarseSet<>(factory, data.clone(), next.clone());
     }
 
     private int[] ensureCapacity(int index) {
@@ -180,7 +184,7 @@ public class FastSparseSetFactory<E> {
       }
     }
 
-    public void union(FastSparseSet<E> set) {
+    public void union(FastarseSet<E> set) {
 
       int[] extdata = set.getData();
       int[] extnext = set.getNext();
@@ -205,7 +209,7 @@ public class FastSparseSetFactory<E> {
       while (pointer != 0);
     }
 
-    public void intersection(FastSparseSet<E> set) {
+    public void intersection(FastarseSet<E> set) {
       int[] extdata = set.getData();
       int[] intdata = data;
 
@@ -222,7 +226,7 @@ public class FastSparseSetFactory<E> {
       setNext();
     }
 
-    public void complement(FastSparseSet<E> set) {
+    public void complement(FastarseSet<E> set) {
 
       int[] extdata = set.getData();
       int[] intdata = data;
@@ -248,9 +252,9 @@ public class FastSparseSetFactory<E> {
     @Override
     public boolean equals(Object o) {
       if (o == this) return true;
-      if (!(o instanceof FastSparseSet)) return false;
+      if (!(o instanceof FastarseSet)) return false;
 
-      int[] longdata = ((FastSparseSet<?>)o).getData();
+      int[] longdata = ((FastarseSet<?>)o).getData();
       int[] shortdata = data;
 
       if (data.length > longdata.length) {
@@ -304,7 +308,7 @@ public class FastSparseSetFactory<E> {
 
     @Override
     public Iterator<E> iterator() {
-      return new FastSparseSetIterator<>(this);
+      return new FastarseSetIterator<>(this);
     }
 
     public Set<E> toPlainSet() {
@@ -341,12 +345,12 @@ public class FastSparseSetFactory<E> {
       return next;
     }
 
-    public FastSparseSetFactory<E> getFactory() {
+    public FastarseSetFactory<E> getFactory() {
       return factory;
     }
   }
 
-  public static final class FastSparseSetIterator<E> implements Iterator<E> {
+  public static final class FastarseSetIterator<E> implements Iterator<E> {
 
     private final VBStyleCollection<int[], E> colValuesInternal;
     private final int[] data;
@@ -356,7 +360,7 @@ public class FastSparseSetFactory<E> {
     private int pointer = -1;
     private int next_pointer = -1;
 
-    private FastSparseSetIterator(FastSparseSet<E> set) {
+    private FastarseSetIterator(FastarseSet<E> set) {
       colValuesInternal = set.getFactory().getInternalValuesCollection();
       data = set.getData();
       next = set.getNext();

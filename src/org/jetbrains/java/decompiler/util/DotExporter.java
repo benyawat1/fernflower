@@ -15,14 +15,19 @@ import org.jetbrains.java.decompiler.modules.decompiler.vars.VarVersionNode;
 import org.jetbrains.java.decompiler.modules.decompiler.vars.VarVersionsGraph;
 import org.jetbrains.java.decompiler.struct.StructMethod;
 import org.jetbrains.java.decompiler.struct.gen.MethodDescriptor;
-import org.jetbrains.java.decompiler.util.FastSparseSetFactory.FastSparseSet;
+import org.jetbrains.java.decompiler.util.FastarseSetFactory.FastarseSet;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 @SuppressWarnings("CallToPrintStackTrace")
 public final class DotExporter {
@@ -138,9 +143,9 @@ public final class DotExporter {
       if (vars != null && vars.containsKey(block.id)) {
         SFormsFastMapDirect map = vars.get(block.id);
 
-        List<Entry<Integer, FastSparseSet<Integer>>> lst = map.entryList();
+        List<Entry<Integer, FastarseSet<Integer>>> lst = map.entryList();
         if (lst != null) {
-          for (Entry<Integer, FastSparseSet<Integer>> entry : lst) {
+          for (Entry<Integer, FastarseSet<Integer>> entry : lst) {
             label.append("\\n").append(entry.getKey());
             Set<Integer> set = entry.getValue().toPlainSet();
             label.append("=").append(set);

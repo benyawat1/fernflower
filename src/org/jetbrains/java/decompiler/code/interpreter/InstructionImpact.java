@@ -255,7 +255,7 @@ public final class InstructionImpact {
     null,                        //		public final static int		opc_getfield = 180;
     null,                        //		public final static int		opc_putfield = 181;
     null,                        //		public final static int		opc_invokevirtual = 182;
-    null,                        //		public final static int		opc_invokespecial = 183;
+    null,                        //		public final static int		opc_invokeecial = 183;
     null,                        //		public final static int		opc_invokestatic = 184;
     null,                        //		public final static int		opc_invokeinterface = 185;
     null,                        //		public final static int		opc_xxxunusedxxx = 186;
@@ -313,7 +313,7 @@ public final class InstructionImpact {
   //	null, 			//		public final static int		opc_getfield = 180;
   //	null, 			//		public final static int		opc_putfield = 181;
   //	null, 			//		public final static int		opc_invokevirtual = 182;
-  //	null, 			//		public final static int		opc_invokespecial = 183;
+  //	null, 			//		public final static int		opc_invokeecial = 183;
   //	null, 			//		public final static int		opc_invokestatic = 184;
   //	null, 			//		public final static int		opc_invokeinterface = 185;
   //	null,			//		public final static int		opc_new = 187;
@@ -360,11 +360,11 @@ public final class InstructionImpact {
     }
     else {
       // Sonderbehandlung
-      processSpecialInstructions(data, instr, pool);
+      processecialInstructions(data, instr, pool);
     }
   }
 
-  private static void processSpecialInstructions(DataPoint data, Instruction instr, ConstantPool pool) {
+  private static void processecialInstructions(DataPoint data, Instruction instr, ConstantPool pool) {
 
     VarType var1;
     PrimitiveConstant cn;
@@ -455,7 +455,7 @@ public final class InstructionImpact {
         stack.pop(var1.getStackSize());
         break;
       case CodeConstants.opc_invokevirtual:
-      case CodeConstants.opc_invokespecial:
+      case CodeConstants.opc_invokeecial:
       case CodeConstants.opc_invokeinterface:
         stack.pop();
       case CodeConstants.opc_invokestatic:

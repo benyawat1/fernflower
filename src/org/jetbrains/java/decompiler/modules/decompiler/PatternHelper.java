@@ -6,14 +6,34 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.collectors.CounterContainer;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
-import org.jetbrains.java.decompiler.modules.decompiler.exps.*;
-import org.jetbrains.java.decompiler.modules.decompiler.stats.*;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.AssignmentExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.ConstExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.ExitExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.Exprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.FunctionExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.InvocationExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.NewExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.RecordVarExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.exps.VarExprent;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.BasicBlockStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.CatchStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.IfStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.RootStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.SequenceStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
 import org.jetbrains.java.decompiler.modules.decompiler.vars.VarProcessor;
 import org.jetbrains.java.decompiler.struct.StructClass;
 import org.jetbrains.java.decompiler.struct.gen.VarType;
 import org.jetbrains.java.decompiler.util.VBStyleCollection;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 
 import static org.jetbrains.java.decompiler.modules.decompiler.SwitchHelper.TempVarAssignmentItem;
 import static org.jetbrains.java.decompiler.modules.decompiler.SwitchHelper.removeTempVariableDeclarations;
@@ -32,7 +52,7 @@ public final class PatternHelper {
    * @param structClass owner class of <code>statement</code>
    */
   public static void replaceAssignmentsWithPatternVariables(@NotNull RootStatement statement, @NotNull StructClass structClass) {
-    if (!structClass.hasPatternsInInstanceofSupport()) return;
+    if (!structClass.haatternsInInstanceofSupport()) return;
     boolean recordPatternSupport = structClass.hasRecordPatternSupport();
     List<TempVarAssignmentItem> tempVarAssignments = new ArrayList<>();
 
@@ -331,7 +351,7 @@ public final class PatternHelper {
   }
 
   /**
-   * Processes a catch statement to check if it matches a specific pattern that involves
+   * Processes a catch statement to check if it matches a ecific pattern that involves
    * record assignments. If the pattern matches, the method updates the given VarTracker
    * with the record assignment information.
    * Expected pattern:

@@ -40,7 +40,7 @@ public class ClassWrapper {
   public void init() {
     DecompilerContext.setProperty(DecompilerContext.CURRENT_CLASS, classStruct);
     DecompilerContext.setProperty(DecompilerContext.CURRENT_CLASS_WRAPPER, this);
-    DecompilerContext.setProperty(DecompilerContext.CURRENT_CLASS_NODE, DecompilerContext.getClassProcessor().getMapRootClasses().get(classStruct.qualifiedName));
+    DecompilerContext.setProperty(DecompilerContext.CURRENT_CLASS_NODE, DecompilerContext.getClasrocessor().getMapRootClasses().get(classStruct.qualifiedName));
     DecompilerContext.getLogger().startClass(classStruct.qualifiedName);
 
     boolean testMode = DecompilerContext.getOption(IFernflowerPreferences.UNIT_TEST_MODE);

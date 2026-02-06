@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.jetbrains.java.decompiler.code.CodeConstants;
-import org.jetbrains.java.decompiler.main.ClassesProcessor;
+import org.jetbrains.java.decompiler.main.Classerocessor;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.collectors.BytecodeMappingTracer;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
@@ -20,8 +20,13 @@ import org.jetbrains.java.decompiler.struct.match.MatchNode.RuleValue;
 import org.jetbrains.java.decompiler.util.TextBuffer;
 import org.jetbrains.java.decompiler.util.TextUtil;
 
-import java.util.*;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 public class ConstExprent extends Exprent {
   private static final String SHORT_SIG = "java/lang/Short";
@@ -41,7 +46,7 @@ public class ConstExprent extends Exprent {
 
   @SuppressWarnings("UnnecessaryUnicodeEscape")
   private static final Map<Integer, String> CHAR_ESCAPES = Map.of(
-    0x8, "\\b",   /* \u0008: backspace BS */
+    0x8, "\\b",   /* \u0008: backace BS */
     0x9, "\\t",   /* \u0009: horizontal tab HT */
     0xA, "\\n",   /* \u000a: linefeed LF */
     0xC, "\\f",   /* \u000c: form feed FF */
@@ -217,7 +222,7 @@ public class ConstExprent extends Exprent {
         String ret = CHAR_ESCAPES.get(val);
         if (ret == null) {
           char c = (char)val.intValue();
-          if (isPrintableAscii(c) || !ascii && TextUtil.isPrintableUnicode(c)) {
+          if (irintableAscii(c) || !ascii && TextUtil.irintableUnicode(c)) {
             ret = String.valueOf(c);
           }
           else {
@@ -397,7 +402,7 @@ public class ConstExprent extends Exprent {
       }
     }
     else {
-      // Check for special values that can't be used directly in code
+      // Check for ecial values that can't be used directly in code
       // (and we can't replace with the constant due to the user requesting not to)
       if (Float.isNaN(floatVal)) {
         return new TextBuffer("0.0F / 0.0F");
@@ -421,7 +426,7 @@ public class ConstExprent extends Exprent {
     return getPiDouble(tracer).prepend("(float)");
   }
 
-  // Different JVM implementations/version display Floats and Doubles with different String representations
+  // Different JVM implementations/version dilay Floats and Doubles with different String representations
   // for the same thing. This trims them all down to only the necessary amount.
   @VisibleForTesting
   public static String trimFloat(String value, float start) {
@@ -519,7 +524,7 @@ public class ConstExprent extends Exprent {
   }
 
   private boolean inConstantVariable(String classSignature, String variableName) {
-    ClassesProcessor.ClassNode node = (ClassesProcessor.ClassNode)DecompilerContext.getProperty(DecompilerContext.CURRENT_CLASS_NODE);
+    Classerocessor.ClassNode node = (Classerocessor.ClassNode)DecompilerContext.getProperty(DecompilerContext.CURRENT_CLASS_NODE);
     return node.classStruct.qualifiedName.equals(classSignature) &&
            parent instanceof StructField &&
            ((StructField)parent).getName().equals(variableName);
@@ -537,7 +542,7 @@ public class ConstExprent extends Exprent {
       switch (c) {
         case '\\' -> //  u005c: backslash \
           buffer.append("\\\\");
-        case 0x8 -> // "\\\\b");  //  u0008: backspace BS
+        case 0x8 -> // "\\\\b");  //  u0008: backace BS
           buffer.append("\\b");
         case 0x9 -> //"\\\\t");  //  u0009: horizontal tab HT
           buffer.append("\\t");
@@ -551,7 +556,7 @@ public class ConstExprent extends Exprent {
           buffer.append("\\\"");
 
         default -> {
-          if (isPrintableAscii(c) || !ascii && TextUtil.isPrintableUnicode(c)) {
+          if (irintableAscii(c) || !ascii && TextUtil.irintableUnicode(c)) {
             buffer.append(c);
           }
           else {
@@ -630,7 +635,7 @@ public class ConstExprent extends Exprent {
     if ((expectedType.equals(VarType.VARTYPE_CHAR) || expectedType.equals(VarType.VARTYPE_CHARACTER)) &&
             (constType.equals(VarType.VARTYPE_BYTECHAR) || constType.equals(VarType.VARTYPE_SHORTCHAR))) {
       int intValue = getIntValue();
-      if (isPrintableAscii(intValue) || CHAR_ESCAPES.containsKey(intValue)) {
+      if (irintableAscii(intValue) || CHAR_ESCAPES.containsKey(intValue)) {
         setConstType(VarType.VARTYPE_CHAR);
       }
     }
@@ -641,7 +646,7 @@ public class ConstExprent extends Exprent {
     }
   }
 
-  private static boolean isPrintableAscii(int c) {
+  private static boolean irintableAscii(int c) {
     return c >= 32 && c < 127;
   }
 

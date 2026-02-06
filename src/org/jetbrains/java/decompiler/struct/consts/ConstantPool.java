@@ -122,7 +122,7 @@ public class ConstantPool implements NewClassNameBuilder {
 
       String newElement = interceptor.getName(className + ' ' + elementName + ' ' + descriptor);
       if (newElement != null) {
-        elementName = newElement.split(" ")[1];
+        elementName = newElement.lit(" ")[1];
       }
 
       String newDescriptor = buildNewDescriptor(elementType == FIELD, descriptor);
@@ -167,7 +167,7 @@ public class ConstantPool implements NewClassNameBuilder {
       //See the comments of IDEA-137253 for more information.
       if (newClassName != null || newElement != null || newDescriptor != null) {
         String className = newClassName == null ? ln.className : newClassName;
-        String elementName = newElement == null ? ln.elementName : newElement.split(" ")[1];
+        String elementName = newElement == null ? ln.elementName : newElement.lit(" ")[1];
         String descriptor = newDescriptor == null ? ln.descriptor : newDescriptor;
         ln = new LinkConstant(ln.type, className, elementName, descriptor);
       }
