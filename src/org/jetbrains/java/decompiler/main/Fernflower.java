@@ -2,11 +2,6 @@
 package org.jetbrains.java.decompiler.main;
 
 import org.jetbrains.annotations.Nullable;
-<<<<<<< HEAD
-import org.jetbrains.java.decompiler.main.Classerocessor.ClassNode;
-import org.jetbrains.java.decompiler.main.extern.*;
-=======
-import org.jetbrains.java.decompiler.main.ClassesProcessor.ClassNode;
 import org.jetbrains.java.decompiler.main.extern.*;
 import org.jetbrains.java.decompiler.modules.renamer.IdentifierConverter;
 import org.jetbrains.java.decompiler.modules.renamer.MemberConverterHelper;
@@ -17,7 +12,7 @@ import org.jetbrains.java.decompiler.struct.StructContext;
 import org.jetbrains.java.decompiler.struct.lazy.LazyLoader;
 import org.jetbrains.java.decompiler.util.ClasathScanner;
 import org.jetbrains.java.decompiler.util.JADNameProvider;
-import org.jetbrains.java.decompiler.util.TextBuffer;
+import org.jetbrains.java.decompiler.main.ClassNode;
 
 import java.io.File;
 import java.util.HashMap;
@@ -26,7 +21,7 @@ import java.util.Map;
 
 public class Fernflower implements IDecompiledData {
   private final StructContext structContext;
-  private final Classerocessor clasrocessor;
+  private final ClassesProcessor classesProcessor;
   private final IMemberIdentifierRenamer helper;
   private final IdentifierConverter converter;
 
@@ -49,7 +44,7 @@ public class Fernflower implements IDecompiledData {
     }
 
     structContext = new StructContext(saver, this, new LazyLoader(provider));
-    clasrocessor = new Classerocessor(structContext);
+    classesProcessor = new ClassesProcessor(structContext);
 
     PoolInterceptor interceptor = null;
     if ("1".equals(properties.get(IFernflowerPreferences.RENAME_ENTITIES))) {
@@ -67,7 +62,7 @@ public class Fernflower implements IDecompiledData {
     if (factoryClazz != null) {
       try {
         renamerFactory = Class.forName(factoryClazz).asSubclass(IVariableNamingFactory.class).getDeclaredConstructor().newInstance();
-      } catch (Exception e) {
+      } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
         logger.writeMessage("Error loading renamer factory class: " + factoryClazz, e);
       }
     }
@@ -80,7 +75,7 @@ public class Fernflower implements IDecompiledData {
       }
     }
 
-    DecompilerContext context = new DecompilerContext(properties, logger, structContext, clasrocessor, interceptor, cancellationManager, renamerFactory);
+    DecompilerContext context = new DecompilerContext(properties, logger, structContext, classesProcessor, interceptor, cancellationManager, renamerFactory);
 
     DecompilerContext.setCurrentContext(context);
 
@@ -120,13 +115,13 @@ public class Fernflower implements IDecompiledData {
       converter.rename();
     }
 
-    clasrocessor.loadClasses(helper);
+    classesProcessor.loadClasses(helper);
 
     structContext.saveContext();
   }
 
   public void addToMustBeDecompiled(String prefix) {
-    clasrocessor.addToMustBeDecompiled(prefix);
+    classesProcessor.addToMustBeDecompiled(prefix);
   }
 
   public void clearContext() {
@@ -135,7 +130,7 @@ public class Fernflower implements IDecompiledData {
 
   @Override
   public String getClassEntryName(StructClass cl, String entryName) {
-    ClassNode node = clasrocessor.getMapRootClasses().get(cl.qualifiedName);
+    ClassNode node = classesProcessor.getMapRootClasses().get(cl.qualifiedName);
     if (node == null || node.type != ClassNode.CLASS_ROOT) {
       return null;
     }
@@ -149,19 +144,8 @@ public class Fernflower implements IDecompiledData {
   }
 
   @Override
-  public String getClassContent(StructClass cl) {
-    try {
-      TextBuffer buffer = new TextBuffer(Classerocessor.AVERAGE_CLASS_SIZE);
-      buffer.append(DecompilerContext.getProperty(IFernflowerPreferences.BANNER).toString());
-      clasrocessor.writeClass(cl, buffer);
-      return buffer.toString();
-    }
-    catch (CancellationManager.CanceledException e) {
-      throw e;
-    }
-    catch (Throwable t) {
-      DecompilerContext.getLogger().writeMessage("Class " + cl.qualifiedName + " couldn't be fully decompiled.", t);
-      return null;
-    }
+  public String getClassContent(StructClass structClass) {
+    // TODO: Implement this method based on your decompilation logic
+    return "";
   }
 }

@@ -1,6 +1,18 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package org.jetbrains.java.decompiler.main;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
 import org.jetbrains.java.decompiler.code.CodeConstants;
 import org.jetbrains.java.decompiler.code.Instruction;
 import org.jetbrains.java.decompiler.code.InstructionSequence;
@@ -29,20 +41,7 @@ import org.jetbrains.java.decompiler.util.InterpreterUtil;
 import org.jetbrains.java.decompiler.util.TextBuffer;
 import org.jetbrains.java.decompiler.util.VBStyleCollection;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
-
-public class Classerocessor {
+public class ClassesProcessor {
   public static final int AVERAGE_CLASS_SIZE = 16 * 1024;
 
   private final StructContext context;
@@ -76,7 +75,7 @@ public class Classerocessor {
     }
   }
 
-  public Classerocessor(StructContext context) {
+  public ClassesProcessor(StructContext context) {
     this.context = context;
   }
 

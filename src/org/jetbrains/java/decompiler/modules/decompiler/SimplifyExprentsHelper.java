@@ -72,6 +72,10 @@ public class SimplifyExprentsHelper {
           exprent type:field name:$fieldname$ ret:$field$
           exprent type:var index:$var$""");
 
+    public static MatchEngine getClass14Builder() {
+        return class14Builder;
+    }
+
   private final boolean firstInvocation;
 
   public SimplifyExprentsHelper(boolean firstInvocation) {
